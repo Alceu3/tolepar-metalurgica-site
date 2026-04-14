@@ -1,0 +1,221 @@
+<!doctype html>
+<html lang="pt-BR">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta
+      name="description"
+      content="Tolepar Metalúrgica em Toledo-PR. Estruturas metálicas, portões, coberturas, grades, calhas e rufos."
+    />
+    <title>Tolepar Metalúrgica | Toledo-PR</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&family=Sora:wght@600;700;800&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="styles.css" />
+  </head>
+  <body class="logo-soft">
+    <div class="brand-bg" aria-hidden="true">
+      <img src="images/logo.png" alt="" width="56" height="56" decoding="async" fetchpriority="low" />
+    </div>
+
+    <header class="topbar" id="topbar">
+      <a href="#inicio" class="brand">
+        <img src="images/logo.png" alt="Logo Tolepar" class="brand-logo" width="56" height="56" decoding="async" />
+        <span>Tolepar Metalúrgica</span>
+      </a>
+
+      <button id="menuBtn" class="menu-btn" type="button" aria-label="Abrir menu">
+        &#9776;
+      </button>
+
+      <nav id="mainNav" class="nav">
+        <a href="#sobre">Sobre</a>
+        <a href="#servicos">Serviços</a>
+        <a href="#portfolio">Portfólio</a>
+        <a href="#videos">Vídeos</a>
+        <a href="#contato">Contato</a>
+      </nav>
+    </header>
+
+    <main>
+      <section id="inicio" class="hero">
+        <div class="hero-content">
+          <p class="hero-tag">Metalurgia premium em Toledo-PR</p>
+          <h1>
+            <span class="hero-title-line hero-brand-line">Tolepar Metalúrgica</span>
+            <span class="hero-title-line hero-support-line">Acabamento de alto nível</span>
+          </h1>
+          <p>
+            Da medição à instalação final, a Tolepar entrega solidez, estética e
+            precisão técnica para valorizar seu projeto e evitar retrabalho.
+          </p>
+          <div class="hero-actions">
+            <a class="btn btn-primary" href="https://wa.me/5545999927688" target="_blank" rel="noopener noreferrer">Falar com especialista</a>
+            <a class="btn btn-secondary" href="#portfolio">Ver projetos reais</a>
+          </div>
+          <div class="hero-points">
+            <span>Portões personalizados</span>
+            <span>Estruturas para obra</span>
+            <span>Coberturas resistentes</span>
+            <span>Calhas e rufos profissionais</span>
+          </div>
+        </div>
+      </section>
+
+      <section id="sobre" class="section about">
+        <div>
+          <p class="kicker">Sobre a empresa</p>
+          <h2>Metalúrgica e funilaria com atendimento direto</h2>
+          <p>
+            Fundada em outubro de 2016, a Tolepar atende Toledo e região com soluções
+            completas em serralheria e estruturas metálicas. Trabalhamos com projeto,
+            fabricação e instalação.
+          </p>
+          <p>
+            Fazemos cada serviço com acabamento profissional e foco no resultado que o
+            cliente precisa no dia a dia da obra ou da empresa.
+          </p>
+        </div>
+        <div class="about-stats">
+          <article>
+            <strong>2016</strong>
+            <span>Início das atividades</span>
+          </article>
+          <article>
+            <strong>+8 anos</strong>
+            <span>Experiência em campo</span>
+          </article>
+          <article>
+            <strong>Toledo-PR</strong>
+            <span>Atendimento local</span>
+          </article>
+        </div>
+      </section>
+
+      <section id="servicos" class="section">
+        <p class="kicker">Especialidades</p>
+        <h2>Serviços da Tolepar</h2>
+        <div class="service-grid">
+          <article class="service-card">
+            <h3>Estruturas metálicas</h3>
+            <p>Galpões, bases e estruturas para obras residenciais e industriais.</p>
+          </article>
+          <article class="service-card">
+            <h3>Portões e serralheria</h3>
+            <p>Portões sob medida com acabamento resistente e visual moderno.</p>
+          </article>
+          <article class="service-card">
+            <h3>Coberturas</h3>
+            <p>Coberturas com estrutura metálica e montagem segura no local.</p>
+          </article>
+          <article class="service-card">
+            <h3>Grades</h3>
+            <p>Proteção e delimitação com qualidade de solda e alinhamento.</p>
+          </article>
+          <article class="service-card">
+            <h3>Calhas e rufos</h3>
+            <p>Fabricação e instalação para drenagem e vedação eficiente.</p>
+          </article>
+          <article class="service-card">
+            <h3>Corte, dobra e solda</h3>
+            <p>Execução técnica para peças e conjuntos metálicos personalizados.</p>
+          </article>
+        </div>
+      </section>
+
+      <section id="portfolio" class="section">
+        <p class="kicker">Portfólio</p>
+        <h2>Trabalhos por categoria</h2>
+        <p class="section-intro">
+          Clique na categoria para abrir as fotos correspondentes.
+        </p>
+        <div class="gallery-tools">
+          <label class="edit-toggle" for="toggleEditMode">
+            <input id="toggleEditMode" type="checkbox" />
+            <span>Modo edição (mostrar excluir)</span>
+          </label>
+          <div class="tool-actions">
+            <button id="addPhotosBtn" class="btn btn-reset" type="button">Adicionar fotos</button>
+            <button id="addVideosBtn" class="btn btn-reset" type="button">Adicionar vídeos</button>
+            <button id="resetHiddenPhotos" class="btn btn-reset" type="button">
+              Restaurar fotos ocultas
+            </button>
+          </div>
+        </div>
+        <input id="photoInput" class="file-input-hidden" type="file" accept="image/*" multiple />
+        <input id="videoInput" class="file-input-hidden" type="file" accept="video/*" multiple />
+        <div id="galleryCategories" class="gallery-categories"></div>
+
+        <div class="manual-media-block">
+          <h3>Fotos adicionadas manualmente</h3>
+          <p>Use o botão acima para incluir novas fotos sem alterar código.</p>
+          <div id="manualPhotosGrid" class="manual-media-grid"></div>
+        </div>
+      </section>
+
+      <section id="videos" class="section videos">
+        <p class="kicker">Vídeos</p>
+        <h2>Atualizações e reels</h2>
+        <div class="video-wrap">
+          <iframe
+            title="Facebook Tolepar"
+            src="https://www.facebook.com/plugins/page.php?href=https%3A%2F%2Fwww.facebook.com%2FMetalurgicaTolepar&tabs=timeline&width=500&height=560&small_header=false&adapt_container_width=true&hide_cover=false&show_facepile=false"
+            loading="lazy"
+            width="500"
+            height="560"
+            style="border:none;overflow:hidden"
+            scrolling="no"
+            frameborder="0"
+            allowfullscreen="true"
+            allow="autoplay; clipboard-write; encrypted-media; picture-in-picture; web-share"
+          ></iframe>
+        </div>
+
+        <div class="manual-media-block">
+          <h3>Vídeos adicionados manualmente</h3>
+          <p>Os vídeos enviados aparecem aqui automaticamente.</p>
+          <div id="manualVideosGrid" class="manual-video-grid"></div>
+        </div>
+      </section>
+
+      <section id="contato" class="section contact">
+        <div>
+          <p class="kicker">Contato</p>
+          <h2>Fale com a Tolepar</h2>
+          <ul class="contact-list">
+            <li>Toledo - PR</li>
+            <li><a href="https://wa.me/5545999927688" target="_blank" rel="noopener noreferrer">WhatsApp: (45) 99992-7688</a></li>
+            <li><a href="mailto:toleparmetalurgica29@gmail.com">toleparmetalurgica29@gmail.com</a></li>
+            <li><a href="https://www.facebook.com/MetalurgicaTolepar" target="_blank" rel="noopener noreferrer">facebook.com/MetalurgicaTolepar</a></li>
+          </ul>
+        </div>
+        <div class="contact-cta">
+          <p>Atendimento rápido para orçamento e visita técnica.</p>
+          <a class="btn btn-primary" href="https://wa.me/5545999927688" target="_blank" rel="noopener noreferrer">Chamar no WhatsApp</a>
+        </div>
+      </section>
+    </main>
+
+    <div id="lightbox" class="lightbox" role="dialog" aria-modal="true" aria-label="Visualizar foto">
+      <button id="lbClose" class="lb-close" aria-label="Fechar">&times;</button>
+      <button id="lbPrev" class="lb-nav lb-prev" aria-label="Anterior">&#8249;</button>
+      <img id="lbImg" class="lb-img" src="" alt="Foto ampliada" />
+      <button id="lbNext" class="lb-nav lb-next" aria-label="Próxima">&#8250;</button>
+      <button id="lbDelete" class="lb-delete" type="button" aria-label="Excluir foto">
+        Excluir foto
+      </button>
+    </div>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        <img src="images/logo.png" alt="Logo Tolepar" class="footer-logo" width="44" height="44" decoding="async" loading="lazy" />
+        <span>&copy; <span id="year"></span> Tolepar Metalúrgica</span>
+      </div>
+    </footer>
+
+    <script src="script.js" defer></script>
+  </body>
+</html>
