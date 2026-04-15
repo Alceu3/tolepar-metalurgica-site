@@ -8,6 +8,7 @@ Site institucional estático em HTML, CSS e JavaScript para apresentação da To
 - Seção de serviços
 - Galeria de trabalhos (blocos prontos para trocar por fotos reais)
 - Área de contato com dados da empresa
+- Dois modelos visuais (Modelo 1 e Modelo 2) com troca no topo do site
 
 ## Arquivos
 - index.html: estrutura da página
@@ -18,6 +19,10 @@ Site institucional estático em HTML, CSS e JavaScript para apresentação da To
 1. Abra a pasta no VS Code.
 2. Abra o arquivo index.html no navegador.
 3. Se preferir, use Live Server para atualização automática.
+
+## Alternar modelo visual
+- No topo do site, use o seletor "Modelo".
+- A escolha fica salva no navegador para as próximas visitas.
 
 ## Observação
 Não foi possível extrair automaticamente os trabalhos do Facebook porque a página está com acesso restrito para coleta pública.

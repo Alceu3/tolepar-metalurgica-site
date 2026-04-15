@@ -31,6 +31,8 @@ const IMAGES = {
   calhasrufos: [],
 };
 
+const SITE_MODEL_KEY = "tolepar_site_model";
+
 const CATEGORY_META = [
   {
     key: "all",
@@ -79,6 +81,27 @@ const CUSTOM_VIDEOS_KEY = "tolepar_custom_videos";
 const hiddenPhotos = new Set();
 let customPhotos = [];
 let customVideos = [];
+
+function applySiteModel(model) {
+  const selected = model === "model-2" ? "model-2" : "model-1";
+  document.body.classList.remove("model-1", "model-2");
+  document.body.classList.add(selected);
+}
+
+function initSiteModelSwitcher() {
+  const select = document.getElementById("siteModel");
+  if (!select) return;
+
+  const savedModel = localStorage.getItem(SITE_MODEL_KEY) || "model-1";
+  applySiteModel(savedModel);
+  select.value = savedModel === "model-2" ? "model-2" : "model-1";
+
+  select.addEventListener("change", () => {
+    const selected = select.value === "model-2" ? "model-2" : "model-1";
+    applySiteModel(selected);
+    localStorage.setItem(SITE_MODEL_KEY, selected);
+  });
+}
 
 function loadCustomMedia() {
   try {
@@ -358,6 +381,8 @@ function deleteCurrentLightboxPhoto() {
 }
 
 document.addEventListener("DOMContentLoaded", () => {
+  initSiteModelSwitcher();
+
   const menuBtn = document.getElementById("menuBtn");
   const nav = document.getElementById("mainNav");
 
