@@ -12,6 +12,7 @@
       content="metalúrgica em Toledo-PR, serralheria em Toledo-PR, estruturas metálicas Toledo, portões sob medida Toledo, coberturas metálicas Toledo, calhas e rufos Toledo"
     />
     <meta name="robots" content="index, follow" />
+    <meta name="theme-color" content="#c7502b" />
     <link rel="canonical" href="https://alceu3.github.io/tolepar-metalurgica-site/" />
 
     <meta property="og:type" content="website" />
@@ -80,8 +81,40 @@
         ]
       }
     </script>
+    <script type="application/ld+json">
+      {
+        "@context": "https://schema.org",
+        "@type": "FAQPage",
+        "mainEntity": [
+          {
+            "@type": "Question",
+            "name": "A Tolepar atende apenas Toledo-PR?",
+            "acceptedAnswer": {
+              "@type": "Answer",
+              "text": "Atendemos Toledo-PR e cidades da regiao, de acordo com o tipo de servico e agenda de instalacao."
+            }
+          },
+          {
+            "@type": "Question",
+            "name": "Quais servicos de serralheria a Tolepar faz?",
+            "acceptedAnswer": {
+              "@type": "Answer",
+              "text": "Executamos estruturas metalicas, portoes sob medida, coberturas, grades, calhas e rufos, alem de corte, dobra e solda."
+            }
+          },
+          {
+            "@type": "Question",
+            "name": "Como pedir orcamento de estrutura metalica em Toledo?",
+            "acceptedAnswer": {
+              "@type": "Answer",
+              "text": "Voce pode solicitar orcamento pelo WhatsApp da Tolepar. Nossa equipe avalia a necessidade do projeto e orienta os proximos passos."
+            }
+          }
+        ]
+      }
+    </script>
   </head>
-  <body class="logo-soft">
+  <body class="logo-soft model-1">
     <div class="brand-bg" aria-hidden="true">
       <img src="images/logo.png" alt="" width="56" height="56" decoding="async" fetchpriority="low" />
     </div>
@@ -101,8 +134,17 @@
         <a href="#servicos">Serviços</a>
         <a href="#portfolio">Portfólio</a>
         <a href="#videos">Vídeos</a>
+        <a href="#faq">FAQ</a>
         <a href="#contato">Contato</a>
       </nav>
+
+      <div class="model-switch" aria-label="Selecionar modelo visual do site">
+        <label for="siteModel">Modelo</label>
+        <select id="siteModel" name="siteModel">
+          <option value="model-1">Modelo 1</option>
+          <option value="model-2">Modelo 2</option>
+        </select>
+      </div>
     </header>
 
     <main>
@@ -265,6 +307,45 @@
           <p>Atendimento rápido para orçamento e visita técnica.</p>
           <a class="btn btn-primary" href="https://wa.me/5545999927688" target="_blank" rel="noopener noreferrer">Chamar no WhatsApp</a>
         </div>
+      </section>
+
+      <section id="atendimento-local" class="section">
+        <p class="kicker">Região atendida</p>
+        <h2>Atendimento de serralheria em Toledo-PR e região</h2>
+        <p>
+          A Tolepar atende clientes residenciais, comerciais e industriais em Toledo-PR,
+          com fabricação e instalação técnica para cada projeto.
+        </p>
+        <p>
+          Também avaliamos serviços em cidades próximas, conforme distância,
+          complexidade da obra e disponibilidade de agenda.
+        </p>
+      </section>
+
+      <section id="faq" class="section faq">
+        <p class="kicker">Perguntas frequentes</p>
+        <h2>Dúvidas comuns sobre serviços metálicos</h2>
+        <details class="faq-item">
+          <summary>A Tolepar atende apenas Toledo-PR?</summary>
+          <p>
+            O foco principal é Toledo-PR, mas também avaliamos atendimento em cidades próximas
+            para estruturas metálicas, portões, coberturas e demais serviços.
+          </p>
+        </details>
+        <details class="faq-item">
+          <summary>Quais serviços de serralheria vocês executam?</summary>
+          <p>
+            Trabalhamos com estruturas metálicas, portões sob medida, coberturas,
+            grades, calhas e rufos, além de corte, dobra e solda para projetos personalizados.
+          </p>
+        </details>
+        <details class="faq-item">
+          <summary>Como solicitar orçamento?</summary>
+          <p>
+            Você pode chamar direto no WhatsApp para enviar medidas, fotos e detalhes do projeto.
+            Assim, a equipe orienta o orçamento e a visita técnica quando necessário.
+          </p>
+        </details>
       </section>
     </main>
 

@@ -1,5 +1,6 @@
 :root {
   --bg: #f4efe6;
+  --bg-alt: #ece3d2;
   --surface: #ffffff;
   --ink: #121822;
   --muted: #1e2430;
@@ -25,10 +26,13 @@ html {
 body {
   font-family: "Manrope", "Segoe UI", sans-serif;
   color: var(--ink);
-  background: var(--bg);
+  background:
+    radial-gradient(circle at 12% -10%, rgba(255, 255, 255, 0.52), transparent 35%),
+    linear-gradient(165deg, var(--bg), var(--bg-alt));
   line-height: 1.65;
   position: relative;
   font-weight: 500;
+  transition: background 0.35s ease, color 0.35s ease;
 }
 
 body.logo-soft {
@@ -93,6 +97,31 @@ a {
   gap: 1rem;
   padding: 0.72rem 1rem;
   backdrop-filter: blur(10px);
+}
+
+.model-switch {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.45rem;
+  color: #fff;
+  font-size: 0.78rem;
+  font-weight: 700;
+  letter-spacing: 0.02em;
+}
+
+.model-switch select {
+  border: 1px solid rgba(255, 255, 255, 0.18);
+  border-radius: 9px;
+  background: rgba(255, 255, 255, 0.08);
+  color: #fff;
+  font: inherit;
+  font-size: 0.8rem;
+  font-weight: 700;
+  padding: 0.34rem 0.5rem;
+}
+
+.model-switch select option {
+  color: #111;
 }
 
 .brand {
@@ -298,6 +327,72 @@ main {
   padding: 2.6rem 1.8rem;
   content-visibility: auto;
   contain-intrinsic-size: 1px 760px;
+}
+
+body.model-2 {
+  --bg: #dce8ea;
+  --bg-alt: #c8dce2;
+  --surface: #f3fafb;
+  --ink: #10232a;
+  --muted: #244048;
+  --brand: #0e7583;
+  --brand-dark: #095866;
+  --line: #b6d2d9;
+}
+
+body.model-2 .topbar {
+  background: rgba(6, 44, 51, 0.9);
+  border-color: rgba(194, 232, 239, 0.18);
+}
+
+body.model-2 .hero {
+  background:
+    linear-gradient(138deg, rgba(4, 54, 63, 0.82), rgba(6, 48, 69, 0.8) 56%, rgba(3, 90, 104, 0.82) 140%),
+    url("images/template-bg.jpg") center / cover no-repeat;
+}
+
+body.model-2 .hero-content {
+  background: rgba(2, 18, 21, 0.25);
+}
+
+body.model-2 .hero-brand-line {
+  color: #d8f7fa;
+}
+
+body.model-2 .hero-title-strong,
+body.model-2 .hero-support-line {
+  color: #b3f0f5;
+}
+
+body.model-2 .about-stats article {
+  background: linear-gradient(155deg, #0b6170, #073a44);
+}
+
+body.model-2 .service-card,
+body.model-2 .album-card,
+body.model-2 .video-wrap,
+body.model-2 .manual-photo-item,
+body.model-2 .manual-video-item {
+  border: 1px solid rgba(6, 63, 72, 0.15);
+  background: rgba(255, 255, 255, 0.34);
+  box-shadow: 0 12px 26px rgba(5, 48, 56, 0.1);
+}
+
+body.model-2 .contact-cta {
+  background: rgba(14, 117, 131, 0.16);
+}
+
+body.model-2 .btn.btn-reset {
+  background: #d7e9ec;
+  color: #163840;
+}
+
+body.model-2 .btn.btn-reset:hover {
+  background: #c5dde1;
+}
+
+body.model-2 .footer {
+  background: linear-gradient(145deg, #0d4d58, #07343d);
 }
 
 .kicker {
@@ -663,6 +758,35 @@ main {
   font-weight: 600;
 }
 
+.faq {
+  display: grid;
+  gap: 0.7rem;
+}
+
+.faq-item {
+  border: 1px solid rgba(18, 24, 34, 0.12);
+  border-radius: 12px;
+  background: rgba(255, 255, 255, 0.32);
+  padding: 0.75rem 0.9rem;
+}
+
+.faq-item summary {
+  cursor: pointer;
+  font-family: "Sora", sans-serif;
+  font-size: 1rem;
+  font-weight: 700;
+  color: var(--ink);
+}
+
+.faq-item p {
+  margin-top: 0.6rem;
+}
+
+body.model-2 .faq-item {
+  border-color: rgba(6, 63, 72, 0.24);
+  background: rgba(255, 255, 255, 0.4);
+}
+
 .lightbox {
   display: none;
   position: fixed;
@@ -815,6 +939,12 @@ main {
 
   .menu-btn {
     display: inline-block;
+  }
+
+  .model-switch {
+    width: 100%;
+    justify-content: flex-end;
+    order: 5;
   }
 
   .nav {
