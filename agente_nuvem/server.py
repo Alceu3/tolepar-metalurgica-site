@@ -210,6 +210,14 @@ async def whatsapp_webhook(request: Request, key: str | None = None):
     memory.add_to_history("user", f"[whatsapp:{from_number}] {body}")
     memory.add_to_history("assistant", resposta)
 
+    # Se cliente demonstrou interesse em contratar → cria pedido e notifica dono
+    if brain._detectar_servico(body):
+        cliente_nome = from_number.replace("whatsapp:", "") or "Cliente"
+        loop = asyncio.get_event_loop()
+        await loop.run_in_executor(
+            None, brain._criar_pedido_e_notificar, body, from_number, cliente_nome
+        )
+
     # Notifica Alceu se for o primeiro contato (pedido novo detectado)
     owner = str(getattr(config, "OWNER_WHATSAPP", "") or "").strip()
     if owner and owner != from_number:
@@ -288,12 +296,18 @@ async def telegram_webhook(request: Request):
     memory.add_to_history("user", f"[telegram:{chat_id}:{from_user}] {texto}")
     memory.add_to_history("assistant", resposta)
 
+    # Se cliente demonstrou interesse em contratar → cria pedido e notifica Alceu
+    owner_id = str(getattr(config, "TELEGRAM_OWNER_CHAT_ID", "") or "").strip()
+    if brain._detectar_servico(texto):
+        await loop.run_in_executor(
+            None, brain._criar_pedido_e_notificar, texto, chat_id, from_user
+        )
+
     # Responde ao cliente no Telegram
     await loop.run_in_executor(None, telegram_bot.enviar, chat_id, resposta)
 
-    # Notifica Alceu se não for ele mesmo escrevendo
-    owner_id = str(getattr(config, "TELEGRAM_OWNER_CHAT_ID", "") or "").strip()
-    if owner_id and chat_id != owner_id:
+    # Notifica Alceu sobre novo contato (se não for ele mesmo e ainda não notificou via pedido)
+    if owner_id and chat_id != owner_id and not brain._detectar_servico(texto):
         aviso = f"📩 Novo contato no Telegram!\nDe: {from_user} (id:{chat_id})\nMensagem: {texto[:200]}"
         await loop.run_in_executor(None, telegram_bot.notificar_dono, aviso)
 

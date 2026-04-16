@@ -8,30 +8,35 @@ import config
 import memory
 import tools
 
-SYSTEM_PROMPT = f"""Você é {config.AGENT_NAME}, um agente de IA autônomo que trabalha AO LADO do usuário como parceiro de trabalho.
+SYSTEM_PROMPT = f"""Você é {config.AGENT_NAME}, assistente comercial da operação em nuvem de uma equipe de desenvolvimento freelance.
+Seu papel é atender clientes, qualificar pedidos e encaminhar serviços para produção.
 
-CAPACIDADES:
-👁️  Ver a tela — você enxerga o computador em tempo real
-🖐️  Controlar — mouse, teclado, abrir sites e navegar
-💬  Conversar — voz e texto em português
-📋  Memória — guarda clientes, tarefas e projetos
-🧠  Raciocínio — planeja e executa tarefas complexas
+SERVIÇOS QUE OFERECEMOS:
+- Criação de sites (landing page, institucional, e-commerce)
+- Automações (bots, scripts, integrações)
+- Programas e sistemas personalizados
+- Planilhas avançadas e relatórios
+- Integrações com APIs e sistemas
 
-COMO AGIR:
-• Use ver_tela somente quando a tarefa depender da tela atual ou antes de automatizar cliques
-• Para preencher formulários: veja a tela → identifique os campos → preencha um a um
-• Para cadastros em plataformas: abra o site, veja a tela, execute passo a passo
-• Salve dados importantes de clientes e tarefas na memória
-• Sempre confirme ações irreversíveis (envios, compras, pagamentos) ANTES de executar
-• Quando for realizar múltiplas ações, explique o plano brevemente antes
-• Se encontrar erro em algum passo, analise a tela e tente uma abordagem alternativa
-• Se a solicitação for apenas conversa, explicação ou planejamento textual, não use ferramentas
+COMO ATENDER:
+1. Cumprimente o cliente com simpatia.
+2. Descubra o objetivo do projeto com perguntas curtas e claras.
+3. Confirme escopo inicial, prazo desejado e forma de contato.
+4. Diga que o pedido será registrado e enviado para análise da equipe.
+5. Mantenha tom profissional e linguagem simples.
 
-PERFIL:
-Você ajuda com: cadastros em plataformas, atendimento a clientes, responder dúvidas,
-gerenciar projetos, automatizar tarefas repetitivas e resolver problemas junto com o usuário.
+REGRAS IMPORTANTES:
+- Não invente preços: informe que o orçamento vem após análise.
+- Não prometa prazo final: diga que a equipe confirma depois de avaliar.
+- Se o cliente estiver confuso, ajude com perguntas guiadas.
+- Se for só dúvida/conversa, responda normalmente sem forçar fechamento.
+- Se o cliente confirmar interesse, finalize com mensagem de pedido registrado.
 
-Fale SEMPRE em português brasileiro, de forma profissional e amigável."""
+CONTEXTO OPERACIONAL:
+- Você atua como agente em nuvem (atendimento e triagem comercial).
+- Não diga que executa ações locais no computador do cliente.
+- Responda sempre em português brasileiro.
+"""
 
 _TOOL_NAMES = {
     t.get("function", {}).get("name")
@@ -54,8 +59,8 @@ _GREETING_PHRASES = {
 
 _SMALL_TALK_RESPONSES = {
     "tudo": "Perfeito. Estou aqui e pronta para te ajudar no que voce precisar.",
-    "tudo bem": "Tudo certo por aqui. Quer que eu veja sua tela ou execute alguma tarefa?",
-    "de boa": "Boa. Se quiser, posso te ajudar com a proxima tarefa agora.",
+    "tudo bem": "Tudo certo por aqui. Me conta seu projeto que eu te ajudo a organizar o pedido.",
+    "de boa": "Perfeito. Se quiser, ja me diga que tipo de servico voce precisa.",
     "ok": "Certo. Me diga o proximo passo.",
     "blz": "Fechado. O que fazemos agora?",
     "beleza": "Beleza. Pode mandar a proxima acao.",
@@ -67,18 +72,18 @@ _SMALL_TALK_RESPONSES = {
     "legal": "Otimo! Pode continuar.",
     "certo": "Perfeito. Pode prosseguir.",
     "entendi": "Certo. Me diga o que quer fazer agora.",
-    "com que eu falo": "Voce esta falando com Evelyn, assistente virtual da Tolepar. Posso responder duvidas, receber pedidos e te ajudar com orcamentos.",
-    "com quem falo": "Voce fala com Evelyn, assistente da Tolepar. Como posso te ajudar?",
-    "com quem eu falo": "Voce fala com Evelyn, a assistente virtual da Tolepar. Estou aqui para receber pedidos e tirar duvidas.",
-    "quem e voce": "Sou a Evelyn, assistente virtual da Tolepar. Posso te ajudar com orcamentos, pedidos e informacoes sobre nossos servicos.",
-    "quem es voce": "Sou a Evelyn, assistente da Tolepar. Me diz como posso te ajudar!",
-    "o que e isso": "Sou a Evelyn, assistente virtual da Tolepar Metalurgica. Estou aqui para te atender!",
+    "com que eu falo": "Voce fala com a Evelyn, assistente virtual da nossa equipe de desenvolvimento. Posso te ajudar com sites, automacoes, programas e muito mais!",
+    "com quem falo": "Sou a Evelyn! Assistente da equipe de desenvolvimento. Me conta o que voce precisa e a gente resolve!",
+    "com quem eu falo": "Voce fala com a Evelyn, assistente virtual. Estou aqui para receber seu pedido e tirar duvidas sobre nossos servicos.",
+    "quem e voce": "Sou a Evelyn, assistente da equipe! Fazemos sites, automacoes, programas e integrações. Me conta o que você precisa!",
+    "quem es voce": "Sou a Evelyn, assistente virtual da equipe de desenvolvimento. Como posso te ajudar hoje?",
+    "o que e isso": "Sou a Evelyn, assistente virtual! Atendo pedidos de sites, automacoes e programas para nossa equipe de desenvolvimento.",
     "ola tudo bem": "Tudo otimo! Em que posso te ajudar hoje?",
-    "oi tudo bem": "Oi! Tudo certo por aqui. O que voce precisa?",
-    "ta bom": "Fechado, Alceu. Pode mandar o proximo passo.",
-    "ouvir": "Estou te ouvindo, Alceu. Pode falar que eu sigo com voce.",
-    "ta me ouvindo": "Estou te ouvindo sim, Alceu. Pode falar que eu te acompanho.",
-    "voce ta me ouvindo": "Sim, Alceu. Estou te ouvindo e pronta para ajudar.",
+    "oi tudo bem": "Oi! Tudo certo. Me conta o que voce precisa!",
+    "ta bom": "Que bom! Posso te ajudar com mais alguma coisa?",
+    "ouvir": "Estou aqui! Pode falar o que voce precisa.",
+    "ta me ouvindo": "Estou sim! Pode falar.",
+    "voce ta me ouvindo": "Estou aqui, pode falar!",
 }
 
 _FAST_CHAT_MARKERS = (
@@ -109,17 +114,17 @@ _GREETING_CURSOR = 0
 _READY_CURSOR = 0
 
 _GREETING_VARIANTS = [
-    "Oi, {name}! Boa te ver por aqui. Como posso te ajudar agora?",
-    "Ola, {name}! Tudo certo por ai? Me diz no que eu te ajudo.",
-    "Ei, {name}! Estou com voce. Qual e a proxima tarefa?",
-    "Boa! {name}, pode mandar que eu te ajudo agora.",
+    "Oi, {name}! Como posso te ajudar com seu projeto hoje?",
+    "Ola, {name}! Me conta o que voce precisa desenvolver.",
+    "Ei, {name}! Quer site, automacao, sistema ou integracao?",
+    "Boa, {name}! Pode me explicar seu projeto que eu organizo o pedido.",
 ]
 
 _READY_VARIANTS = [
-    "Perfeito, {name}. Quer conversar, ver a tela ou executar uma tarefa?",
-    "Estou pronta, {name}. Me fala se quer chat, visao da tela ou automacao.",
-    "Fechou, {name}. Posso te ouvir, analisar a tela ou executar uma acao.",
-    "Tudo certo, {name}. Diz o que voce quer que eu faca agora.",
+    "Perfeito, {name}. Me diga seu objetivo que eu preparo o pedido.",
+    "Estou pronta, {name}. Qual servico voce quer contratar?",
+    "Fechou, {name}. Me passe os detalhes do projeto para eu registrar.",
+    "Tudo certo, {name}. Me conta escopo e prazo desejado.",
 ]
 
 _CAPABILITY_MARKERS = (
@@ -258,9 +263,9 @@ def _capability_response(texto: str) -> str | None:
         return None
     if any(marker in norm for marker in _CAPABILITY_MARKERS):
         return (
-            "Eu posso: ver sua tela, clicar e digitar, abrir sites, "
-            "usar atalhos, salvar clientes e tarefas, ler/escrever arquivos, "
-            "e conversar por voz ou texto."
+            "Nossa equipe faz: criação de sites, automações, programas desktop, "
+            "planilhas avançadas e integrações de sistemas. "
+            "Me conta o que você precisa e a gente prepara um orçamento!"
         )
     return None
 
@@ -285,6 +290,67 @@ def _small_talk_response(texto: str) -> str | None:
         return _ready_response()
 
     return None
+
+
+# ── Detecção de intenção de contratar serviço ──────────────────────────────
+_SERVICO_MARKERS = (
+    "quero um site", "preciso de um site", "fazer um site", "criar um site",
+    "quero site", "preciso site",
+    "quero uma automacao", "preciso de automacao", "automatizar",
+    "quero um programa", "preciso de um programa", "criar um programa",
+    "quero um sistema", "preciso de um sistema",
+    "quero uma planilha", "preciso de planilha",
+    "fazer uma integracao", "integrar sistemas", "api",
+    "contratar", "quanto custa", "orcamento", "orçamento",
+    "quero contratar", "tenho um projeto", "tenho uma ideia",
+    "preciso de ajuda com", "voce faz", "voces fazem",
+)
+
+def _detectar_servico(texto: str) -> bool:
+    """Retorna True se o cliente parece querer contratar um serviço."""
+    norm = _normalize_text(texto)
+    return any(marker in norm for marker in _SERVICO_MARKERS)
+
+
+def _criar_pedido_e_notificar(texto: str, chat_id: str = "", nome_cliente: str = "Cliente") -> None:
+    """Cria pedido na memória e notifica Alceu via Telegram (em background)."""
+    try:
+        import telegram_bot
+        # Extrai o tipo de serviço do texto
+        servico = "Verificar detalhes"
+        norm = _normalize_text(texto)
+        if "site" in norm:
+            servico = "Criação de site"
+        elif "automacao" in norm or "automatizar" in norm:
+            servico = "Automação"
+        elif "programa" in norm or "sistema" in norm:
+            servico = "Programa/sistema"
+        elif "planilha" in norm:
+            servico = "Planilha"
+        elif "integracao" in norm or "api" in norm:
+            servico = "Integração/API"
+
+        pedido = memory.criar_pedido(
+            cliente=nome_cliente,
+            servico=servico,
+            detalhes=texto[:500],
+            contato=f"telegram:{chat_id}" if chat_id else "",
+            origem="telegram",
+        )
+
+        owner_id = str(getattr(config, "TELEGRAM_OWNER_CHAT_ID", "") or "").strip()
+        if owner_id:
+            pid = pedido.get("id", "?")
+            aviso = (
+                f"🔔 NOVO PEDIDO #{pid}\n"
+                f"👤 Cliente: {nome_cliente}\n"
+                f"🛠 Serviço: {servico}\n"
+                f"💬 Mensagem: {texto[:200]}\n\n"
+                f"Execute: PULL_PEDIDOS_NUVEM.bat para baixar a pasta."
+            )
+            telegram_bot.notificar_dono(aviso)
+    except Exception as ex:
+        print(f"[brain] Erro ao criar pedido: {ex}")
 
 
 def _is_invalid_vision_text(texto: str) -> bool:
@@ -796,3 +862,74 @@ def processar(mensagem_usuario: str) -> str:
         return resposta
 
     return "Atingi o limite de passos. Pode reformular o pedido?"
+
+
+# ── Detecção: Evelyn confirmou que registrou o pedido? ────────────────────
+
+_CONFIRMACAO_EVELYN = (
+    "foi registrado", "pedido registrado", "pedido foi registrado",
+    "anotei", "anotado", "anotamos",
+    "encaminhado", "encaminhei", "vou encaminhar",
+    "nossa equipe vai", "equipe vai analisar", "equipe vai entrar",
+    "retornar em breve", "entrar em contato", "entraremos em contato",
+    "registrei", "registramos", "ja registrei",
+    "vou passar para a equipe", "passarei para a equipe",
+)
+
+def _evelyn_confirmou_pedido(resposta: str) -> bool:
+    """Retorna True quando Evelyn avisou que o pedido foi registrado."""
+    norm = _normalize_text(resposta)
+    return any(m in norm for m in _CONFIRMACAO_EVELYN)
+
+
+# ── Processar com contexto por cliente ────────────────────────────────────
+
+def processar_cliente(texto: str, chat_id: str, nome_cliente: str = "Cliente") -> str:
+    """
+    Versão da Evelyn para Telegram/WhatsApp.
+    Cada cliente tem seu próprio histórico — sem mistura entre atendimentos.
+    Quando Evelyn confirmar o pedido, cria automaticamente na fila e notifica Alceu.
+    """
+    # Respostas rápidas locais (não precisam de API)
+    if _is_simple_greeting(texto):
+        resposta = f"Oi, {nome_cliente}! 😊 Me conta o que você precisa — site, automação, programa ou outra coisa?"
+        memory.add_to_client_history(chat_id, "user", texto)
+        memory.add_to_client_history(chat_id, "assistant", resposta)
+        return resposta
+
+    cap = _capability_response(texto)
+    if cap:
+        memory.add_to_client_history(chat_id, "user", texto)
+        memory.add_to_client_history(chat_id, "assistant", cap)
+        return cap
+
+    # Monta mensagens com histórico DESTE cliente
+    historico = memory.get_client_history(chat_id, max_messages=20)
+    mensagens = [{"role": "system", "content": SYSTEM_PROMPT}]
+    mensagens.extend(historico)
+    mensagens.append({"role": "user", "content": texto})
+
+    # Chama LLM (sem ferramentas — Evelyn só conversa, não controla PC)
+    message, err = _chat_with_provider(mensagens, tools=False)
+    if err or not message:
+        resposta = "Desculpa, estou com dificuldade técnica agora. Pode tentar em instantes?"
+    else:
+        resposta = str(message.get("content") or "").strip()
+        if not resposta:
+            resposta = "Pode repetir? Não entendi direito."
+
+    # Salva no histórico do cliente
+    memory.add_to_client_history(chat_id, "user", texto)
+    memory.add_to_client_history(chat_id, "assistant", resposta)
+
+    # Se Evelyn acabou de confirmar o pedido → cria e notifica Alceu
+    if _evelyn_confirmou_pedido(resposta):
+        _criar_pedido_e_notificar(
+            texto=texto,
+            resposta_evelyn=resposta,
+            chat_id=chat_id,
+            nome_cliente=nome_cliente,
+            historico=historico,
+        )
+
+    return resposta
