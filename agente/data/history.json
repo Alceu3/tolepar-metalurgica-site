@@ -1,26 +1,6 @@
 [
   {
     "role": "user",
-    "content": "oi tá me ouvindo",
-    "ts": "2026-04-15T22:08:26.308952"
-  },
-  {
-    "role": "assistant",
-    "content": "Oi! Estou pronta. Quer conversar, ver a tela ou executar uma tarefa?",
-    "ts": "2026-04-15T22:08:26.324308"
-  },
-  {
-    "role": "user",
-    "content": "oi tá me ouvindo",
-    "ts": "2026-04-15T22:11:00.085734"
-  },
-  {
-    "role": "assistant",
-    "content": "Oi! Estou pronta. Quer conversar, ver a tela ou executar uma tarefa?",
-    "ts": "2026-04-15T22:11:00.105086"
-  },
-  {
-    "role": "user",
     "content": "Olá",
     "ts": "2026-04-15T22:11:39.100329"
   },
@@ -298,5 +278,25 @@
     "role": "assistant",
     "content": "Sim, estou te ouvindo bem! Pode falar normalmente, que eu entendo tudo. Não há problemas de áudio ou conexão por aqui. Vamos conversar!",
     "ts": "2026-04-15T23:07:56.282119"
+  },
+  {
+    "role": "user",
+    "content": "oi",
+    "ts": "2026-04-15T23:11:56.653868"
+  },
+  {
+    "role": "assistant",
+    "content": "Oi, Alceu! Boa te ver por aqui. Como posso te ajudar agora?",
+    "ts": "2026-04-15T23:11:56.676908"
+  },
+  {
+    "role": "user",
+    "content": "ola",
+    "ts": "2026-04-15T23:21:15.894512"
+  },
+  {
+    "role": "assistant",
+    "content": "Oi, Alceu! Boa te ver por aqui. Como posso te ajudar agora?",
+    "ts": "2026-04-15T23:21:15.938890"
   }
 ]

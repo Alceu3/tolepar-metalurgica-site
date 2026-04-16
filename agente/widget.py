@@ -8,7 +8,7 @@ sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 import tkinter as tk
 from tkinter import scrolledtext
 
-import brain, config, hearing, voice
+import brain, config, hearing, voice, memory
 
 # Cores (tema escuro semi-transparente)
 BG      = "#0d1117"
@@ -63,7 +63,7 @@ class ARIAWidget:
         self.root.after(120, self._focus_input)
         nome = str(getattr(config, "USER_NAME", "") or "").strip()
         saudacao = f"Ola, {nome}! Estou pronta. Pode falar ou digitar." if nome else "Ola! Estou pronta. Pode falar ou digitar."
-        self.root.after(300, lambda: self._add("ARIA", saudacao))
+        self.root.after(300, lambda: self._carregar_historico(saudacao))
         # Liga o microfone automaticamente se estiver habilitado
         if config.MIC_ENABLED and hearing.MIC_AVAILABLE and getattr(config, "MIC_AUTO_START", False):
             self.root.after(600, self._toggle_mic)
@@ -215,6 +215,21 @@ class ARIAWidget:
         self.chat.insert("end", f"{texto}\n\n")
         self.chat.configure(state="disabled")
         self.chat.see("end")
+
+    def _carregar_historico(self, saudacao):
+        """Carrega as últimas mensagens salvas e exibe no chat antes da saudação."""
+        try:
+            hist = memory.get_history(max_messages=20)
+            if hist:
+                self._add("SISTEMA", "--- histórico anterior ---")
+                for msg in hist:
+                    quem = "ARIA" if msg["role"] == "assistant" else (
+                        str(getattr(config, "USER_NAME", "Você") or "Você"))
+                    self._add(quem, msg["content"])
+                self._add("SISTEMA", "--- nova sessão ---")
+        except Exception:
+            pass
+        self._add("ARIA", saudacao)
 
     def _set_status(self, msg):
         self.root.after(0, lambda: self.lbl_status.configure(text=msg))

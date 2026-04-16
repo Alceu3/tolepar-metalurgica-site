@@ -3,11 +3,15 @@
 # ============================================================
 
 import os as _os, pathlib as _pl
-try:
-    from dotenv import load_dotenv as _ld
-    _ld(_pl.Path(__file__).parent.parent / ".env")
-except ImportError:
-    pass
+def _load_env():
+    env_file = _pl.Path(__file__).parent.parent / ".env"
+    if env_file.exists():
+        for line in env_file.read_text(encoding="utf-8-sig").splitlines():
+            line = line.strip()
+            if line and not line.startswith("#") and "=" in line:
+                k, _, v = line.partition("=")
+                _os.environ.setdefault(k.strip(), v.strip())
+_load_env()
 OPENROUTER_API_KEY = _os.environ.get("OPENROUTER_API_KEY", "")  # https://openrouter.ai/keys
 GROQ_API_KEY = _os.environ.get("GROQ_API_KEY", "")  # https://console.groq.com/keys
 
