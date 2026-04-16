@@ -77,3 +77,9 @@ WHATSAPP_WEBHOOK_KEY = _os.environ.get("WHATSAPP_WEBHOOK_KEY", "")
 TWILIO_ACCOUNT_SID = _os.environ.get("TWILIO_ACCOUNT_SID", "")
 TWILIO_AUTH_TOKEN = _os.environ.get("TWILIO_AUTH_TOKEN", "")
 TWILIO_WHATSAPP_FROM = _os.environ.get("TWILIO_WHATSAPP_FROM", "whatsapp:+14155238886")
+OWNER_WHATSAPP = _os.environ.get("OWNER_WHATSAPP", "whatsapp:+5545999363213")
+OWNER_EMAIL = _os.environ.get("OWNER_EMAIL", "alceucordeiro29@gmail.com")
+
+# Telegram Bot
+TELEGRAM_BOT_TOKEN = _os.environ.get("TELEGRAM_BOT_TOKEN", "")
+TELEGRAM_OWNER_CHAT_ID = _os.environ.get("TELEGRAM_OWNER_CHAT_ID", "")

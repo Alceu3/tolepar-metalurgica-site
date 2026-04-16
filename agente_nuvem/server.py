@@ -13,7 +13,7 @@ from datetime import datetime
 import html
 
 import brain, memory, config
-import whatsapp
+import whatsapp, telegram_bot
 
 app = FastAPI(title="ARIA", docs_url=None, redoc_url=None)
 
@@ -210,6 +210,12 @@ async def whatsapp_webhook(request: Request, key: str | None = None):
     memory.add_to_history("user", f"[whatsapp:{from_number}] {body}")
     memory.add_to_history("assistant", resposta)
 
+    # Notifica Alceu se for o primeiro contato (pedido novo detectado)
+    owner = str(getattr(config, "OWNER_WHATSAPP", "") or "").strip()
+    if owner and owner != from_number:
+        aviso = f"Novo contato no WhatsApp!\nDe: {from_number}\nMensagem: {body[:200]}"
+        asyncio.get_event_loop().run_in_executor(None, whatsapp.enviar_whatsapp, owner, aviso)
+
     safe = html.escape(resposta, quote=False)
     twiml = f"<Response><Message>{safe}</Message></Response>"
     return Response(content=twiml, media_type="application/xml")
@@ -257,6 +263,68 @@ async def websocket_chat(ws: WebSocket):
     finally:
         if ws in _conexoes:
             _conexoes.remove(ws)
+
+@app.post("/telegram/webhook")
+async def telegram_webhook(request: Request):
+    """Webhook Telegram: recebe mensagens e responde com ARIA."""
+    try:
+        data = await request.json()
+    except Exception:
+        return {"ok": True}
+
+    message = data.get("message") or data.get("edited_message") or {}
+    chat_id = str((message.get("chat") or {}).get("id", "")).strip()
+    texto = str(message.get("text") or "").strip()
+    from_user = (message.get("from") or {}).get("first_name", "Cliente")
+
+    if not chat_id or not texto:
+        return {"ok": True}
+
+    loop = asyncio.get_event_loop()
+    resposta = await loop.run_in_executor(None, brain.processar, texto)
+    if resposta in ("__TOGGLE_MIC_ON__", "__TOGGLE_MIC_OFF__"):
+        resposta = "No Telegram eu não ligo microfone, mas posso te atender por texto."
+
+    memory.add_to_history("user", f"[telegram:{chat_id}:{from_user}] {texto}")
+    memory.add_to_history("assistant", resposta)
+
+    # Responde ao cliente no Telegram
+    await loop.run_in_executor(None, telegram_bot.enviar, chat_id, resposta)
+
+    # Notifica Alceu se não for ele mesmo escrevendo
+    owner_id = str(getattr(config, "TELEGRAM_OWNER_CHAT_ID", "") or "").strip()
+    if owner_id and chat_id != owner_id:
+        aviso = f"📩 Novo contato no Telegram!\nDe: {from_user} (id:{chat_id})\nMensagem: {texto[:200]}"
+        await loop.run_in_executor(None, telegram_bot.notificar_dono, aviso)
+
+    return {"ok": True}
+
+
+@app.post("/api/telegram/send")
+async def telegram_send_api(payload: WhatsAppSendIn, x_api_token: str | None = Header(default=None)):
+    """Envia mensagem ativa para qualquer chat Telegram."""
+    _check_token(x_api_token)
+    resultado = telegram_bot.enviar(payload.to.strip(), payload.texto.strip())
+    return {"ok": not resultado.lower().startswith("erro"), "resultado": resultado}
+
+
+@app.post("/api/telegram/register-webhook")
+async def telegram_register(x_api_token: str | None = Header(default=None)):
+    """Registra o webhook do bot Telegram com a URL pública desta instância."""
+    _check_token(x_api_token)
+    url_publica = str(getattr(config, "CLOUD_API_URL", "") or "").strip()
+    if not url_publica:
+        raise HTTPException(status_code=400, detail="CLOUD_API_URL não configurado")
+    result = telegram_bot.registrar_webhook(url_publica)
+    return result
+
+
+@app.get("/api/telegram/info")
+async def telegram_info(x_api_token: str | None = Header(default=None)):
+    """Retorna informações do bot Telegram (nome, username)."""
+    _check_token(x_api_token)
+    return telegram_bot.get_me()
+
 
 # ── Main ───────────────────────────────────────────────────
 
