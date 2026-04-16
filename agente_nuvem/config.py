@@ -1,5 +1,5 @@
 # ============================================================
-#  ARIA - Configurações do Agente
+#  Evelyn - Configurações do Agente (ARIA Nuvem)
 # ============================================================
 
 import os as _os, pathlib as _pl
@@ -37,7 +37,7 @@ OLLAMA_MODEL_VISION = "moondream:latest"
 MODEL = "google/gemini-2.0-flash-exp:free"
 MODEL_VISION = "google/gemini-2.0-flash-exp:free"
 
-AGENT_NAME = "ARIA"
+AGENT_NAME = "Evelyn"
 USER_NAME = "Alceu"
 LANGUAGE = "pt-BR"
 

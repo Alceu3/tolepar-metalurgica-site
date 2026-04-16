@@ -15,7 +15,7 @@ import html
 import brain, memory, config
 import whatsapp, telegram_bot
 
-app = FastAPI(title="ARIA", docs_url=None, redoc_url=None)
+app = FastAPI(title="Evelyn — Tolepar", docs_url=None, redoc_url=None)
 
 # Serve o chat web
 WEB_DIR = os.path.join(os.path.dirname(os.path.abspath(__file__)), "web")
