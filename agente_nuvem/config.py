@@ -82,4 +82,5 @@ OWNER_EMAIL = _os.environ.get("OWNER_EMAIL", "alceucordeiro29@gmail.com")
 
 # Telegram Bot
 TELEGRAM_BOT_TOKEN = _os.environ.get("TELEGRAM_BOT_TOKEN", "")
+TELEGRAM_BOT_USERNAME = _os.environ.get("TELEGRAM_BOT_USERNAME", "aria29_bot")
 TELEGRAM_OWNER_CHAT_ID = _os.environ.get("TELEGRAM_OWNER_CHAT_ID", "")
