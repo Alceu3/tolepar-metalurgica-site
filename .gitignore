@@ -1,0 +1,22 @@
+# Python
+__pycache__/
+*.py[cod]
+*.pyo
+.venv/
+venv/
+env/
+
+# Temp / cache
+agente/_screen_temp.png
+agente/data/agent.log.jsonl
+
+# Test files
+agente/test_*.py
+agente/calibrate.py
+
+# Environment / secrets
+.env
+
+# OS
+Thumbs.db
+.DS_Store

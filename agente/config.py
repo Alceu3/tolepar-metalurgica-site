@@ -1,0 +1,63 @@
+# ============================================================
+#  ARIA - Configurações do Agente
+# ============================================================
+
+import os as _os, pathlib as _pl
+try:
+    from dotenv import load_dotenv as _ld
+    _ld(_pl.Path(__file__).parent.parent / ".env")
+except ImportError:
+    pass
+OPENROUTER_API_KEY = _os.environ.get("OPENROUTER_API_KEY", "")  # https://openrouter.ai/keys
+GROQ_API_KEY = _os.environ.get("GROQ_API_KEY", "")  # https://console.groq.com/keys
+
+# Provedor de IA:
+# "ollama"     -> 100% local (sem custo mensal)
+# "openrouter" -> nuvem (tem modelos gratis e pagos)
+# "groq"       -> nuvem rapida e gratuita (recomendado)
+PROVIDER = "groq"
+
+# Groq
+GROQ_MODEL = "llama-3.3-70b-versatile"  # 70b, rapido e gratuito
+
+# Ollama local
+OLLAMA_BASE_URL = "http://127.0.0.1:11434"
+OLLAMA_MODEL = "llama3.2:3b"
+OLLAMA_MODEL_VISION = "moondream:latest"
+
+# Modelos disponíveis (escolha um):
+# "google/gemini-2.0-flash-exp:free"       → grátis, suporta visão + tools
+# "meta-llama/llama-3.3-70b-instruct:free" → grátis, só tools
+# "openai/gpt-4o-mini"                     → pago, muito confiável
+# "anthropic/claude-3.5-sonnet"            → pago, mais inteligente
+MODEL = "google/gemini-2.0-flash-exp:free"
+MODEL_VISION = "google/gemini-2.0-flash-exp:free"
+
+AGENT_NAME = "ARIA"
+USER_NAME = "Alceu"
+LANGUAGE = "pt-BR"
+
+VOICE_ENABLED = True   # False = sem fala (modo silencioso)
+MIC_ENABLED = True     # False = só digitar (sem microfone)
+INTERACTION_MODE = "hibrido"  # texto | voz | hibrido
+MIC_AUTO_START = False  # True = liga microfone automaticamente ao abrir o widget
+
+VOICE_RATE = 165       # Velocidade da fala (palavras/min)
+MAX_HISTORY = 8       # Mensagens máximas no contexto
+
+# Microfone: deixe None para usar o padrão do sistema.
+# Se necessário, defina um índice específico (ex.: 1, 2, 3).
+MIC_DEVICE_INDEX = None  # Auto-detect the best device
+MIC_NAME_CONTAINS = ""
+
+# Segurança: exige confirmação para ações potencialmente irreversíveis.
+SAFE_MODE = True
+CONFIRM_TOKEN = "CONFIRMO"
+
+# Logging de execução para auditoria e replay de problemas.
+LOG_TO_FILE = True
+LOG_MAX_CHARS = 300
+
+# Fallback para cliques quando o modelo gerar coordenadas de outra resolução.
+REFERENCE_SCREEN_WIDTH = 1920
+REFERENCE_SCREEN_HEIGHT = 1080

@@ -1,0 +1,18 @@
+# ============================================================
+#  ARIA - Dependências
+# ============================================================
+
+requests
+pillow
+pyautogui
+pyperclip
+pyttsx3
+
+# Reconhecimento de voz:
+SpeechRecognition
+# Fallback de captura (quando PyAudio não está disponível)
+sounddevice
+# pyaudio → se pip install pyaudio falhar no Windows, use:
+#   pip install pipwin
+#   pipwin install pyaudio
+pyaudio
