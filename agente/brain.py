@@ -201,6 +201,27 @@ def _direct_local_action(texto: str) -> str | None:
     pediu_pasta_generica = ("pasta" in norm)
     pediu_ouvir = norm in {"ouvir", "me ouvir", "me ouve"}
 
+    # Comandos de microfone — ligar/desligar sem API
+    _MIC_LIGAR = {
+        "ativa o microfone", "ativar microfone", "ativa microfone",
+        "liga o microfone", "ligar microfone", "liga microfone",
+        "ativa o mic", "liga o mic", "liga mic", "ativa mic",
+        "ligar o mic", "ativar o mic",
+        "microfone on", "mic on", "ligar voz", "ativar voz",
+        "começa a ouvir", "comeca a ouvir", "comecar a ouvir",
+    }
+    _MIC_DESLIGAR = {
+        "desativa o microfone", "desativar microfone", "desativa microfone",
+        "desliga o microfone", "desligar microfone", "desliga microfone",
+        "desativa o mic", "desliga o mic", "desliga mic", "desativa mic",
+        "microfone off", "mic off", "desligar voz", "desativar voz",
+        "para de ouvir", "para ouvir",
+    }
+    if norm in _MIC_LIGAR:
+        return "__TOGGLE_MIC_ON__"
+    if norm in _MIC_DESLIGAR:
+        return "__TOGGLE_MIC_OFF__"
+
     if pediu_ouvir:
         nome = _fmt_name()
         if nome:

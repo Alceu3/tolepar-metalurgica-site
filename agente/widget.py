@@ -286,6 +286,17 @@ class ARIAWidget:
         except Exception as ex:
             resp = f"[Erro: {ex}]"
         self._set_status("")
+
+        # Comandos especiais de microfone — ligar/desligar sem exibir resposta bruta
+        if resp == "__TOGGLE_MIC_ON__":
+            self.root.after(0, lambda: self._add("ARIA", "Microfone ativado! Pode falar."))
+            self.root.after(0, lambda: (not self.mic_ativo) and self._toggle_mic())
+            return
+        if resp == "__TOGGLE_MIC_OFF__":
+            self.root.after(0, lambda: self._add("ARIA", "Microfone desativado."))
+            self.root.after(0, lambda: self.mic_ativo and self._toggle_mic())
+            return
+
         self.root.after(0, lambda: self._add("ARIA", resp))
         if config.VOICE_ENABLED:
             threading.Thread(target=voice.falar, args=(resp,), daemon=True).start()
