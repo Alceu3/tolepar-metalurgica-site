@@ -1,0 +1,169 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>ARIA Nuvem</title>
+  <style>
+    :root {
+      --bg: #0a111a;
+      --panel: #101c2a;
+      --line: #25425f;
+      --text: #eaf4ff;
+      --muted: #93b6d7;
+      --me: #123f67;
+      --aria: #1d5b3a;
+      --system: #5f4a1f;
+      --accent: #22a6f2;
+    }
+    * { box-sizing: border-box; }
+    body {
+      margin: 0;
+      min-height: 100vh;
+      font-family: "Segoe UI", Tahoma, sans-serif;
+      color: var(--text);
+      background: radial-gradient(1200px 800px at 20% -10%, #1a3550, var(--bg));
+      display: grid;
+      place-items: center;
+      padding: 12px;
+    }
+    .app {
+      width: 100%;
+      max-width: 760px;
+      height: min(92vh, 980px);
+      border: 1px solid var(--line);
+      border-radius: 16px;
+      background: linear-gradient(180deg, #0f1b29, #0a131f);
+      display: grid;
+      grid-template-rows: auto 1fr auto;
+      overflow: hidden;
+    }
+    header {
+      padding: 14px 16px;
+      border-bottom: 1px solid var(--line);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+    .title { font-weight: 700; letter-spacing: .2px; }
+    .status { color: var(--muted); font-size: 13px; }
+    .chat {
+      padding: 14px;
+      overflow: auto;
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+    .msg {
+      max-width: 86%;
+      padding: 10px 12px;
+      border-radius: 12px;
+      border: 1px solid rgba(255,255,255,.1);
+      white-space: pre-wrap;
+      line-height: 1.35;
+    }
+    .msg small { display: block; color: #bcd6ef; margin-top: 4px; font-size: 11px; }
+    .me { align-self: flex-end; background: var(--me); }
+    .aria { align-self: flex-start; background: var(--aria); }
+    .system { align-self: center; background: var(--system); }
+    form {
+      border-top: 1px solid var(--line);
+      display: grid;
+      grid-template-columns: 1fr auto;
+      gap: 8px;
+      padding: 10px;
+      background: #0b1622;
+    }
+    input {
+      width: 100%;
+      border: 1px solid var(--line);
+      border-radius: 10px;
+      padding: 11px 12px;
+      background: #0a121c;
+      color: var(--text);
+      outline: none;
+    }
+    button {
+      border: 0;
+      border-radius: 10px;
+      padding: 0 16px;
+      font-weight: 700;
+      background: linear-gradient(180deg, #25b5ff, #1788c2);
+      color: #041019;
+      cursor: pointer;
+    }
+    button:disabled { opacity: .6; cursor: not-allowed; }
+  </style>
+</head>
+<body>
+  <main class="app">
+    <header>
+      <div class="title">ARIA Nuvem</div>
+      <div class="status" id="status">conectando...</div>
+    </header>
+    <section class="chat" id="chat"></section>
+    <form id="form">
+      <input id="txt" placeholder="Digite para ARIA..." autocomplete="off" />
+      <button id="send" type="submit">Enviar</button>
+    </form>
+  </main>
+
+  <script>
+    const chat = document.getElementById('chat');
+    const form = document.getElementById('form');
+    const txt = document.getElementById('txt');
+    const statusEl = document.getElementById('status');
+    const send = document.getElementById('send');
+
+    function now() {
+      const d = new Date();
+      return d.toLocaleTimeString('pt-BR', {hour:'2-digit', minute:'2-digit'});
+    }
+
+    function add(tipo, texto, ts) {
+      const div = document.createElement('div');
+      div.className = `msg ${tipo}`;
+      const safeText = (texto ?? '').toString();
+      div.textContent = safeText;
+      const s = document.createElement('small');
+      s.textContent = ts || now();
+      div.appendChild(s);
+      chat.appendChild(div);
+      chat.scrollTop = chat.scrollHeight;
+    }
+
+    async function sendText(texto) {
+      send.disabled = true;
+      try {
+        add('me', texto, now());
+        const r = await fetch('/chat', {
+          method: 'POST',
+          headers: {'Content-Type': 'application/json'},
+          body: JSON.stringify({texto})
+        });
+        const data = await r.json();
+        if (!r.ok) {
+          add('system', `Erro: ${data.detail || 'falha na API'}`, now());
+          return;
+        }
+        add('aria', data.resposta, data.ts);
+      } catch (e) {
+        add('system', `Erro de conexão: ${e}`, now());
+      } finally {
+        send.disabled = false;
+      }
+    }
+
+    form.addEventListener('submit', (e) => {
+      e.preventDefault();
+      const v = txt.value.trim();
+      if (!v) return;
+      txt.value = '';
+      sendText(v);
+    });
+
+    statusEl.textContent = 'online';
+    add('system', 'ARIA Nuvem pronta para atender clientes.', now());
+  </script>
+</body>
+</html>

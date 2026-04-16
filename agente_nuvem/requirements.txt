@@ -1,0 +1,18 @@
+# ============================================================
+#  ARIA - Dependências
+# ============================================================
+
+requests
+pillow
+pyautogui
+pyperclip
+pyttsx3
+fastapi
+uvicorn
+python-multipart
+
+# Reconhecimento de voz:
+SpeechRecognition
+# Fallback de captura (quando PyAudio não está disponível)
+sounddevice
+# pyaudio removido da versão nuvem para evitar falhas de build.
