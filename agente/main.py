@@ -25,6 +25,7 @@ import voice
 import hearing
 import memory
 import hands
+import telegram_bot
 
 
 BANNER = f"""
@@ -51,6 +52,15 @@ COMANDOS_ESPECIAIS = {
     "tarefas":  lambda: memory.listar_tarefas(),
     "clientes": lambda: memory.listar_clientes(),
 }
+
+
+def _iniciar_servicos_background() -> None:
+    """Inicializa serviços auxiliares sem bloquear a interface principal."""
+    try:
+        telegram_bot.start()
+    except Exception as e:
+        # Não derruba o agente se o Telegram falhar ao iniciar.
+        print(f"[AVISO] Telegram não iniciou: {e}")
 
 
 def _normalizar_modo(modo: str) -> str:
@@ -184,6 +194,7 @@ def modo_voz():
 
 
 if __name__ == "__main__":
+    _iniciar_servicos_background()
     if "--voz" in sys.argv:
         modo_voz()
     else:

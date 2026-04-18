@@ -1,0 +1,31 @@
+# Ambiente virtual
+.venv/
+venv/
+env/
+
+# Python
+__pycache__/
+*.py[cod]
+*.pyo
+*.pyd
+
+# Dados sensíveis e logs
+.env
+*.log
+*.log.jsonl
+data/agent.log.jsonl
+data/clients.json
+data/history.json
+data/history.json.bak
+
+# Arquivos temporários de teste
+_test_*.py
+test_*.py
+_tts_test.ps1
+
+# VS Code
+.vscode/
+
+# Sistema
+Thumbs.db
+desktop.ini

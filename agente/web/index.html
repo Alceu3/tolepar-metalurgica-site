@@ -1,0 +1,425 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Evelyn - Local</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            height: 100vh;
+            display: flex;
+            flex-direction: column;
+            color: #333;
+        }
+        
+        .container {
+            display: flex;
+            flex-direction: column;
+            height: 100%;
+            max-width: 500px;
+            margin: 0 auto;
+            background: white;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+        }
+        
+        .header {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 20px;
+            text-align: center;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+        }
+        
+        .header h1 {
+            font-size: 28px;
+            margin-bottom: 5px;
+        }
+        
+        .status {
+            font-size: 12px;
+            opacity: 0.9;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 6px;
+        }
+
+        .dot {
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            display: inline-block;
+            background: #aaa;
+            transition: background 0.4s;
+        }
+
+        .dot.online  { background: #4cff72; }
+        .dot.offline { background: #ff4444; animation: blink 1s infinite; }
+        .dot.chamada { background: #ffdd44; animation: pulse-dot 0.8s infinite; }
+
+        @keyframes blink {
+            0%, 100% { opacity: 1; }
+            50%       { opacity: 0.2; }
+        }
+
+        @keyframes pulse-dot {
+            0%, 100% { transform: scale(1); }
+            50%       { transform: scale(1.5); }
+        }
+        
+        .chat {
+            flex: 1;
+            overflow-y: auto;
+            padding: 15px;
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            background: #f5f5f5;
+        }
+        
+        .msg {
+            display: flex;
+            animation: slideIn 0.3s ease-out;
+        }
+        
+        @keyframes slideIn {
+            from {
+                opacity: 0;
+                transform: translateY(10px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+        
+        .msg.usuario {
+            justify-content: flex-end;
+        }
+        
+        .msg.sistema {
+            justify-content: center;
+        }
+        
+        .msg-conteudo {
+            max-width: 80%;
+            padding: 12px 16px;
+            border-radius: 18px;
+            word-wrap: break-word;
+            line-height: 1.4;
+            font-size: 15px;
+        }
+        
+        .msg.usuario .msg-conteudo {
+            background: #667eea;
+            color: white;
+            border-bottom-right-radius: 4px;
+        }
+        
+        .msg.aria .msg-conteudo {
+            background: white;
+            color: #333;
+            border: 1px solid #ddd;
+            border-bottom-left-radius: 4px;
+            box-shadow: 0 1px 2px rgba(0, 0, 0, 0.05);
+        }
+        
+        .msg.sistema .msg-conteudo {
+            background: transparent;
+            color: #999;
+            font-size: 13px;
+            font-style: italic;
+        }
+        
+        .input-area {
+            padding: 15px;
+            border-top: 1px solid #ddd;
+            background: white;
+            display: flex;
+            gap: 8px;
+            align-items: flex-end;
+        }
+        
+        input {
+            flex: 1;
+            border: 1px solid #ddd;
+            border-radius: 24px;
+            padding: 12px 16px;
+            font-size: 15px;
+            outline: none;
+        }
+        
+        input:focus {
+            border-color: #667eea;
+            box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+        }
+        
+        button {
+            background: #667eea;
+            color: white;
+            border: none;
+            border-radius: 24px;
+            width: 44px;
+            height: 44px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            font-size: 20px;
+            transition: all 0.2s;
+            flex-shrink: 0;
+        }
+        
+        button:hover {
+            background: #5568d3;
+        }
+        
+        button:active {
+            transform: scale(0.95);
+        }
+
+        #call {
+            background: #f44336;
+        }
+
+        #call:hover {
+            background: #d32f2f;
+        }
+
+        #call.active {
+            background: #ff6b6b;
+            animation: pulse 1s infinite;
+        }
+        
+        @keyframes pulse {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.1); }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>Evelyn</h1>
+            <div class="status">
+                <span class="dot" id="dot"></span>
+                <span id="statusTxt">Verificando...</span>
+            </div>
+        </div>
+        
+        <div class="chat" id="chat"></div>
+        
+        <div class="input-area">
+            <input 
+                type="text" 
+                id="input" 
+                placeholder="Digite ou fale..." 
+                autocomplete="off"
+            >
+            <button id="call" title="Modo Chamada">📞</button>
+            <button id="send" title="Enviar">➤</button>
+        </div>
+    </div>
+
+    <script>
+        const chat = document.getElementById('chat');
+        const inp = document.getElementById('input');
+        const send = document.getElementById('send');
+        const call = document.getElementById('call');
+
+        const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
+        let callActive = false;
+        let recognizer = null;
+        let speaking = false;
+        let restarting = false;
+
+        const dot = document.getElementById('dot');
+        const statusTxt = document.getElementById('statusTxt');
+
+        function setStatus(estado, texto) {
+            dot.className = 'dot ' + estado;
+            statusTxt.textContent = texto;
+        }
+
+        function verificarConexao() {
+            fetch('/chat', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ texto: '__ping__' }),
+                signal: AbortSignal.timeout ? AbortSignal.timeout(4000) : undefined
+            })
+            .then(r => r.ok ? setStatus('online', 'Conectado') : setStatus('offline', 'Servidor com erro'))
+            .catch(() => setStatus('offline', 'Sem conexao'));
+        }
+
+        verificarConexao();
+        setInterval(verificarConexao, 10000);
+        
+        function addMsg(tipo, txt) {
+            const d = document.createElement('div');
+            d.className = 'msg ' + tipo;
+            const t = document.createElement('div');
+            t.className = 'msg-conteudo';
+            t.textContent = txt;
+            d.appendChild(t);
+            chat.appendChild(d);
+            chat.scrollTop = chat.scrollHeight;
+        }
+
+        function falarResposta(texto) {
+            if (!texto || !window.speechSynthesis) return;
+
+            window.speechSynthesis.cancel();
+            const u = new SpeechSynthesisUtterance(texto);
+            u.lang = 'pt-BR';
+            u.rate = 1.0;
+            u.pitch = 1.0;
+
+            u.onstart = () => {
+                speaking = true;
+                if (recognizer) {
+                    try { recognizer.stop(); } catch (_) {}
+                }
+            };
+
+            u.onend = () => {
+                speaking = false;
+                if (callActive) {
+                    restartListening();
+                }
+            };
+
+            window.speechSynthesis.speak(u);
+        }
+
+        function enviar(texto) {
+            const txt = texto || inp.value.trim();
+            if (!txt) return;
+            addMsg('usuario', txt);
+            inp.value = '';
+            
+            return fetch('/chat', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ texto: txt })
+            })
+                .then(r => r.json())
+                .then(d => {
+                    const resposta = d.resposta || '';
+                    addMsg('aria', resposta);
+                    return resposta;
+                })
+                .catch(e => {
+                    addMsg('aria', 'Erro: ' + e);
+                    return '';
+                });
+        }
+        
+        send.onclick = () => enviar();
+        inp.onkeypress = e => { if (e.key === 'Enter') enviar(); };
+
+        function restartListening() {
+            if (!recognizer || !callActive || speaking || restarting) return;
+
+            restarting = true;
+            try {
+                recognizer.start();
+            } catch (_) {
+                setTimeout(() => {
+                    try { recognizer.start(); } catch (_) {}
+                }, 300);
+            } finally {
+                setTimeout(() => { restarting = false; }, 350);
+            }
+        }
+
+        function stopCallMode() {
+            callActive = false;
+            call.classList.remove('active');
+            call.textContent = '📞';
+            setStatus('online', 'Conectado');
+            addMsg('sistema', 'Modo chamada desligado.');
+
+            if (window.speechSynthesis) {
+                window.speechSynthesis.cancel();
+            }
+            speaking = false;
+            if (recognizer) {
+                try { recognizer.stop(); } catch (_) {}
+            }
+        }
+
+        function startCallMode() {
+            if (!SpeechRecognition) {
+                addMsg('aria', 'Seu navegador nao suporta chamada de voz continua. Use Chrome no Android.');
+                return;
+            }
+
+            recognizer = new SpeechRecognition();
+            recognizer.lang = 'pt-BR';
+            recognizer.interimResults = false;
+            recognizer.continuous = true;
+            recognizer.maxAlternatives = 1;
+
+            recognizer.onresult = async (event) => {
+                const last = event.results[event.results.length - 1];
+                const texto = (last && last[0] && last[0].transcript ? last[0].transcript : '').trim();
+                if (!texto) return;
+
+                const resposta = await enviar(texto);
+                if (callActive) {
+                    falarResposta(resposta);
+                }
+            };
+
+            recognizer.onerror = (event) => {
+                const err = String(event.error || 'erro desconhecido');
+                if (err === 'not-allowed') {
+                    addMsg('aria', 'Permissao do microfone negada pelo navegador.');
+                    stopCallMode();
+                    return;
+                }
+                if (err === 'no-speech') {
+                    return;
+                }
+                addMsg('sistema', 'Reconhecimento: ' + err);
+            };
+
+            recognizer.onend = () => {
+                if (callActive && !speaking) {
+                    restartListening();
+                }
+            };
+
+            callActive = true;
+            call.classList.add('active');
+            call.textContent = '⏹';
+            setStatus('chamada', 'Em chamada');
+            addMsg('sistema', 'Modo chamada ligado. Fale naturalmente.');
+
+            try {
+                restartListening();
+            } catch (e) {
+                addMsg('aria', 'Nao consegui iniciar chamada: ' + e);
+                stopCallMode();
+            }
+        }
+
+        call.onclick = () => {
+            if (callActive) {
+                stopCallMode();
+            } else {
+                startCallMode();
+            }
+        };
+    </script>
+</body>
+</html>

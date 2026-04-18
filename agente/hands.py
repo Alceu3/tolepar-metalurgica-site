@@ -1,4 +1,5 @@
 import time
+import threading
 import webbrowser
 
 import pyautogui
@@ -7,6 +8,9 @@ import config
 
 pyautogui.FAILSAFE = True
 pyautogui.PAUSE = 0.35
+
+# Controle de scroll contínuo
+_scroll_continuo_flag = threading.Event()
 
 
 def _safe_coords(x: int, y: int):
@@ -64,9 +68,39 @@ def clicar_direito(x: int, y: int):
 
 
 def scroll(quantidade: int):
-    pyautogui.scroll(int(quantidade))
+    """Scroll único forte — rola bastante de uma vez."""
+    sw, sh = pyautogui.size()
+    pyautogui.moveTo(sw // 2, sh // 2, duration=0.1)
+    pyautogui.click()
+    time.sleep(0.2)
+    ticks = int(quantidade) * 200
+    pyautogui.scroll(ticks)
     direcao = "cima" if quantidade > 0 else "baixo"
     return f"Scroll para {direcao} ({abs(quantidade)})"
+
+
+def scroll_continuo(direcao: str):
+    """Inicia scroll contínuo até parar_scroll() ser chamado."""
+    _scroll_continuo_flag.clear()
+    sw, sh = pyautogui.size()
+    pyautogui.moveTo(sw // 2, sh // 2, duration=0.1)
+    pyautogui.click()
+    ticks = -5 if direcao.lower() in ("baixo", "down") else 5
+
+    def _loop():
+        while not _scroll_continuo_flag.is_set():
+            pyautogui.scroll(ticks)
+            time.sleep(0.08)
+
+    t = threading.Thread(target=_loop, daemon=True)
+    t.start()
+    return f"Rolando para {direcao} continuamente. Diga 'para' para parar."
+
+
+def parar_scroll():
+    """Para o scroll contínuo."""
+    _scroll_continuo_flag.set()
+    return "Scroll parado."
 
 
 # ── Teclado ───────────────────────────────────────────────

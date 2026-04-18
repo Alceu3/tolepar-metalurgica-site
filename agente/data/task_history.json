@@ -1,0 +1,611 @@
+[
+  {
+    "ts": "17/04/2026 17:06",
+    "steps": [
+      "🧠 Planejando execução",
+      "✅ Pesquisar na web  →  5 resultados encontrados",
+      "✅ Salvar tarefa  →  ok",
+      "❌ Abrir editor de video  →  app nao encontrado",
+      "🏁 Concluído!"
+    ],
+    "ok": true
+  },
+  {
+    "ts": "17/04/2026 17:29",
+    "steps": [
+      "🧠 Planejando execução",
+      "🏁 Concluído!"
+    ],
+    "ok": true
+  },
+  {
+    "ts": "17/04/2026 17:33",
+    "steps": [
+      "🧠 Planejando execução",
+      "❌ enviar_telegram  →  Erro ao enviar: {\"ok\":false,\"error_code\":403,\"description\":\"Forbidden: bots can't send messages to b",
+      "🏁 Concluído!"
+    ],
+    "ok": true
+  },
+  {
+    "ts": "17/04/2026 17:45",
+    "steps": [
+      "🧠 Planejando execução",
+      "✅ enviar_telegram  →  Token ou chat_id do Telegram não configurado.",
+      "🏁 Concluído!"
+    ],
+    "ok": true
+  },
+  {
+    "ts": "17/04/2026 18:02",
+    "steps": [
+      "🧠 Planejando execução",
+      "✅ enviar_telegram  →  chat_id do dono ainda não registrado — peça para ele mandar /start ao bot primeiro.",
+      "🏁 Concluído!"
+    ],
+    "ok": true
+  },
+  {
+    "ts": "17/04/2026 18:05",
+    "steps": [
+      "🧠 Planejando execução",
+      "✅ enviar_telegram  →  Mensagem enviada no Telegram.",
+      "🏁 Concluído!"
+    ],
+    "ok": true
+  },
+  {
+    "ts": "17/04/2026 18:12",
+    "steps": [
+      "🧠 Planejando execução",
+      "🏁 Concluído!"
+    ],
+    "ok": true
+  },
+  {
+    "ts": "17/04/2026 23:40",
+    "steps": [
+      "🧠 Planejando execução",
+      "🏁 Concluído!"
+    ],
+    "ok": true
+  },
+  {
+    "ts": "17/04/2026 23:40",
+    "steps": [
+      "🧠 Planejando execução",
+      "🏁 Concluído!"
+    ],
+    "ok": true
+  },
+  {
+    "ts": "17/04/2026 23:47",
+    "steps": [
+      "🧠 Planejando execução",
+      "🏁 Concluído!"
+    ],
+    "ok": true
+  },
+  {
+    "ts": "17/04/2026 23:49",
+    "steps": [
+      "🧠 Planejando execução",
+      "🏁 Concluído!"
+    ],
+    "ok": true
+  },
+  {
+    "ts": "17/04/2026 23:49",
+    "steps": [
+      "🧠 Planejando execução",
+      "🏁 Concluído!"
+    ],
+    "ok": true
+  },
+  {
+    "ts": "17/04/2026 23:50",
+    "steps": [
+      "🧠 Planejando execução",
+      "🏁 Concluído!"
+    ],
+    "ok": true
+  },
+  {
+    "ts": "17/04/2026 23:50",
+    "steps": [
+      "🧠 Planejando execução",
+      "🏁 Concluído!"
+    ],
+    "ok": true
+  },
+  {
+    "ts": "17/04/2026 23:51",
+    "steps": [
+      "🧠 Planejando execução",
+      "🏁 Concluído!"
+    ],
+    "ok": true
+  },
+  {
+    "ts": "17/04/2026 23:51",
+    "steps": [
+      "🧠 Planejando execução",
+      "🏁 Concluído!"
+    ],
+    "ok": true
+  },
+  {
+    "ts": "17/04/2026 23:52",
+    "steps": [
+      "🧠 Planejando execução",
+      "🏁 Concluído!"
+    ],
+    "ok": true
+  },
+  {
+    "ts": "17/04/2026 23:52",
+    "steps": [
+      "🧠 Planejando execução",
+      "✅ analisar tela  →  A tela exibida parece ser um ambiente de desenvolvimento integrado (IDE), possivelmente o Visual Stu",
+      "🏁 Concluído!"
+    ],
+    "ok": true
+  },
+  {
+    "ts": "17/04/2026 23:52",
+    "steps": [
+      "🧠 Planejando execução",
+      "✅ analisar tela  →  A tela mostra um ambiente de navegador web, possivelmente do Microsoft Edge ou Google Chrome, com um",
+      "🏁 Concluído!"
+    ],
+    "ok": true
+  },
+  {
+    "ts": "17/04/2026 23:53",
+    "steps": [
+      "🧠 Planejando execução",
+      "🏁 Concluído!"
+    ],
+    "ok": true
+  },
+  {
+    "ts": "17/04/2026 23:54",
+    "steps": [
+      "🧠 Planejando execução",
+      "🏁 Concluído!"
+    ],
+    "ok": true
+  },
+  {
+    "ts": "17/04/2026 23:54",
+    "steps": [
+      "🧠 Planejando execução",
+      "✅ pesquisar_no_youtube  →  Pesquisa aberta no YouTube: 'Legendas pela comunidade Amara.org'. Os videos estao visiveis na tela.",
+      "🏁 Concluído!"
+    ],
+    "ok": true
+  },
+  {
+    "ts": "17/04/2026 23:55",
+    "steps": [
+      "🧠 Planejando execução",
+      "✅ pesquisar_no_youtube  →  Pesquisa aberta no YouTube: 'Legendas pela comunidade Amara.org'. Os videos estao visiveis na tela.",
+      "🏁 Concluído!"
+    ],
+    "ok": true
+  },
+  {
+    "ts": "17/04/2026 23:55",
+    "steps": [
+      "🧠 Planejando execução",
+      "🏁 Concluído!"
+    ],
+    "ok": true
+  },
+  {
+    "ts": "18/04/2026 08:07",
+    "steps": [
+      "🧠 Planejando execução",
+      "🏁 Concluído!"
+    ],
+    "ok": true
+  },
+  {
+    "ts": "18/04/2026 08:07",
+    "steps": [
+      "🧠 Planejando execução",
+      "🏁 Concluído!"
+    ],
+    "ok": true
+  },
+  {
+    "ts": "18/04/2026 08:11",
+    "steps": [
+      "🧠 Planejando execução",
+      "🏁 Concluído!"
+    ],
+    "ok": true
+  },
+  {
+    "ts": "18/04/2026 08:13",
+    "steps": [
+      "🧠 Planejando execução",
+      "🏁 Concluído!"
+    ],
+    "ok": true
+  },
+  {
+    "ts": "18/04/2026 08:22",
+    "steps": [
+      "🧠 Planejando execução",
+      "🏁 Concluído!"
+    ],
+    "ok": true
+  },
+  {
+    "ts": "18/04/2026 08:22",
+    "steps": [
+      "🧠 Planejando execução",
+      "🏁 Concluído!"
+    ],
+    "ok": true
+  },
+  {
+    "ts": "18/04/2026 08:26",
+    "steps": [
+      "🧠 Planejando execução",
+      "🏁 Concluído!"
+    ],
+    "ok": true
+  },
+  {
+    "ts": "18/04/2026 08:31",
+    "steps": [
+      "🧠 Planejando execução",
+      "🏁 Concluído!"
+    ],
+    "ok": true
+  },
+  {
+    "ts": "18/04/2026 08:31",
+    "steps": [
+      "🧠 Planejando execução",
+      "🏁 Concluído!"
+    ],
+    "ok": true
+  },
+  {
+    "ts": "18/04/2026 08:33",
+    "steps": [
+      "🧠 Planejando execução",
+      "🏁 Concluído!"
+    ],
+    "ok": true
+  },
+  {
+    "ts": "18/04/2026 08:36",
+    "steps": [
+      "🧠 Planejando execução",
+      "🏁 Concluído!"
+    ],
+    "ok": true
+  },
+  {
+    "ts": "18/04/2026 08:37",
+    "steps": [
+      "🧠 Planejando execução",
+      "✅ analisar tela  →  A tela exibe um fundo do Windows 11, com um design fluido em tons de azul. No lado esquerdo, há uma ",
+      "🏁 Concluído!"
+    ],
+    "ok": true
+  },
+  {
+    "ts": "18/04/2026 08:38",
+    "steps": [
+      "🧠 Planejando execução",
+      "🏁 Concluído!"
+    ],
+    "ok": true
+  },
+  {
+    "ts": "18/04/2026 08:38",
+    "steps": [
+      "🧠 Planejando execução",
+      "✅ analisar tela  →  A tela exibe um fundo azul com um design fluido característico do Windows 11. No canto inferior esqu",
+      "🏁 Concluído!"
+    ],
+    "ok": true
+  },
+  {
+    "ts": "18/04/2026 08:41",
+    "steps": [
+      "🧠 Planejando execução",
+      "🏁 Concluído!"
+    ],
+    "ok": true
+  },
+  {
+    "ts": "18/04/2026 08:42",
+    "steps": [
+      "🧠 Planejando execução",
+      "🏁 Concluído!"
+    ],
+    "ok": true
+  },
+  {
+    "ts": "18/04/2026 08:49",
+    "steps": [
+      "🧠 Planejando execução",
+      "🏁 Concluído!"
+    ],
+    "ok": true
+  },
+  {
+    "ts": "18/04/2026 09:03",
+    "steps": [
+      "🧠 Planejando execução",
+      "🏁 Concluído!"
+    ],
+    "ok": true
+  },
+  {
+    "ts": "18/04/2026 09:03",
+    "steps": [
+      "🧠 Planejando execução",
+      "🏁 Concluído!"
+    ],
+    "ok": true
+  },
+  {
+    "ts": "18/04/2026 09:05",
+    "steps": [
+      "🧠 Planejando execução",
+      "🏁 Concluído!"
+    ],
+    "ok": true
+  },
+  {
+    "ts": "18/04/2026 09:07",
+    "steps": [
+      "🧠 Planejando execução",
+      "🏁 Concluído!"
+    ],
+    "ok": true
+  },
+  {
+    "ts": "18/04/2026 09:13",
+    "steps": [
+      "🧠 Planejando execução",
+      "🏁 Concluído!"
+    ],
+    "ok": true
+  },
+  {
+    "ts": "18/04/2026 09:13",
+    "steps": [
+      "🧠 Planejando execução",
+      "🏁 Concluído!"
+    ],
+    "ok": true
+  },
+  {
+    "ts": "18/04/2026 09:13",
+    "steps": [
+      "🧠 Planejando execução",
+      "🏁 Concluído!"
+    ],
+    "ok": true
+  },
+  {
+    "ts": "18/04/2026 09:14",
+    "steps": [
+      "🧠 Planejando execução",
+      "🏁 Concluído!"
+    ],
+    "ok": true
+  },
+  {
+    "ts": "18/04/2026 09:15",
+    "steps": [
+      "🧠 Planejando execução",
+      "🏁 Concluído!"
+    ],
+    "ok": true
+  },
+  {
+    "ts": "18/04/2026 09:17",
+    "steps": [
+      "🧠 Planejando execução",
+      "🏁 Concluído!"
+    ],
+    "ok": true
+  },
+  {
+    "ts": "18/04/2026 09:17",
+    "steps": [
+      "🧠 Planejando execução",
+      "🏁 Concluído!"
+    ],
+    "ok": true
+  },
+  {
+    "ts": "18/04/2026 09:18",
+    "steps": [
+      "🧠 Planejando execução",
+      "🏁 Concluído!"
+    ],
+    "ok": true
+  },
+  {
+    "ts": "18/04/2026 09:19",
+    "steps": [
+      "🧠 Planejando execução",
+      "🏁 Concluído!"
+    ],
+    "ok": true
+  },
+  {
+    "ts": "18/04/2026 09:19",
+    "steps": [
+      "🧠 Planejando execução",
+      "🏁 Concluído!"
+    ],
+    "ok": true
+  },
+  {
+    "ts": "18/04/2026 09:20",
+    "steps": [
+      "🧠 Planejando execução",
+      "🏁 Concluído!"
+    ],
+    "ok": true
+  },
+  {
+    "ts": "18/04/2026 09:29",
+    "steps": [
+      "🧠 Planejando execução",
+      "🏁 Concluído!"
+    ],
+    "ok": true
+  },
+  {
+    "ts": "18/04/2026 09:29",
+    "steps": [
+      "🧠 Planejando execução",
+      "🏁 Concluído!"
+    ],
+    "ok": true
+  },
+  {
+    "ts": "18/04/2026 09:29",
+    "steps": [
+      "🧠 Planejando execução",
+      "🏁 Concluído!"
+    ],
+    "ok": true
+  },
+  {
+    "ts": "18/04/2026 09:29",
+    "steps": [
+      "🧠 Planejando execução",
+      "🏁 Concluído!"
+    ],
+    "ok": true
+  },
+  {
+    "ts": "18/04/2026 09:30",
+    "steps": [
+      "🧠 Planejando execução",
+      "🏁 Concluído!"
+    ],
+    "ok": true
+  },
+  {
+    "ts": "18/04/2026 09:30",
+    "steps": [
+      "🧠 Planejando execução",
+      "🏁 Concluído!"
+    ],
+    "ok": true
+  },
+  {
+    "ts": "18/04/2026 09:30",
+    "steps": [
+      "🧠 Planejando execução",
+      "🏁 Concluído!"
+    ],
+    "ok": true
+  },
+  {
+    "ts": "18/04/2026 09:30",
+    "steps": [
+      "🧠 Planejando execução",
+      "🏁 Concluído!"
+    ],
+    "ok": true
+  },
+  {
+    "ts": "18/04/2026 09:30",
+    "steps": [
+      "🧠 Planejando execução",
+      "🏁 Concluído!"
+    ],
+    "ok": true
+  },
+  {
+    "ts": "18/04/2026 09:48",
+    "steps": [
+      "🧠 Planejando execução",
+      "🏁 Concluído!"
+    ],
+    "ok": true
+  },
+  {
+    "ts": "18/04/2026 10:58",
+    "steps": [
+      "🧠 Planejando execução",
+      "🏁 Concluído!"
+    ],
+    "ok": true
+  },
+  {
+    "ts": "18/04/2026 10:58",
+    "steps": [
+      "🧠 Planejando execução",
+      "🏁 Concluído!"
+    ],
+    "ok": true
+  },
+  {
+    "ts": "18/04/2026 11:05",
+    "steps": [
+      "🧠 Planejando execução",
+      "🏁 Concluído!"
+    ],
+    "ok": true
+  },
+  {
+    "ts": "18/04/2026 11:29",
+    "steps": [
+      "🧠 Planejando execução",
+      "🏁 Concluído!"
+    ],
+    "ok": true
+  },
+  {
+    "ts": "18/04/2026 11:35",
+    "steps": [
+      "🧠 Planejando execução",
+      "🏁 Concluído!"
+    ],
+    "ok": true
+  },
+  {
+    "ts": "18/04/2026 11:53",
+    "steps": [
+      "🧠 Planejando execução",
+      "🏁 Concluído!"
+    ],
+    "ok": true
+  },
+  {
+    "ts": "18/04/2026 11:56",
+    "steps": [
+      "🧠 Planejando execução",
+      "✅ analisar tela  →  A tela mostra uma página inicial de um navegador da web, com um fundo de montanhas e um lago. Há íco",
+      "🏁 Concluído!"
+    ],
+    "ok": true
+  },
+  {
+    "ts": "18/04/2026 11:58",
+    "steps": [
+      "🧠 Planejando execução",
+      "✅ analisar tela  →  A tela exibe um navegador da web com uma interface moderna. No topo, há uma barra de endereços onde ",
+      "✅ abrir site  →  Site aberto: https://ms-settings:sound",
+      "✅ analisar tela  →  Na imagem, não consigo ver os dispositivos de entrada de áudio listados. Se precisar de ajuda para v",
+      "🏁 Concluído!"
+    ],
+    "ok": true
+  }
+]

@@ -83,6 +83,40 @@ def descrever_tela(pergunta="O que está na tela? Descreva detalhadamente em por
         if provider == "ollama":
             return _descrever_tela_ollama(pergunta)
 
+        if provider == "openai":
+            imagem_b64 = capturar_base64(max_w=1280)
+            headers = {
+                "Authorization": f"Bearer {config.OPENAI_API_KEY}",
+                "Content-Type": "application/json",
+            }
+            payload = {
+                "model": getattr(config, "OPENAI_MODEL", "gpt-4o-mini"),
+                "messages": [{
+                    "role": "user",
+                    "content": [
+                        {
+                            "type": "image_url",
+                            "image_url": {"url": f"data:image/jpeg;base64,{imagem_b64}", "detail": "low"},
+                        },
+                        {"type": "text", "text": pergunta},
+                    ],
+                }],
+                "max_tokens": 512,
+                "temperature": 0.3,
+            }
+            try:
+                resp = requests.post(
+                    "https://api.openai.com/v1/chat/completions",
+                    headers=headers,
+                    json=payload,
+                    timeout=30,
+                )
+                if resp.status_code == 200:
+                    return (resp.json()["choices"][0]["message"]["content"] or "").strip()
+                return f"Nao consegui analisar a tela agora (erro {resp.status_code})."
+            except Exception as e:
+                return f"Nao consegui analisar a tela agora ({e})."
+
         if provider == "groq":
             imagem_b64 = capturar_base64(max_w=1024)
             headers = {

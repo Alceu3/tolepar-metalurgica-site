@@ -1,226 +1,306 @@
+﻿"""
+hearing.py â€” Captura de voz com VAD eficiente + transcriÃ§Ã£o via OpenAI Whisper.
+"""
+import io
+import os
+import threading
+import wave
+
+import config
+
+# --------------------------------------------------------------------------- #
+# InicializaÃ§Ã£o do backend de Ã¡udio                                            #
+# --------------------------------------------------------------------------- #
 try:
-    import speech_recognition as sr
-    import config
+    import sounddevice as _sd
     import numpy as _np
-    _recognizer = sr.Recognizer()
-    _recognizer.dynamic_energy_threshold = True
-    _recognizer.pause_threshold = 0.7
-    _recognizer.non_speaking_duration = 0.3
-    # SpeechRecognition pode importar mesmo sem PyAudio; valida explicitamente.
+    _AUDIO_AVAILABLE = True
+    _AUDIO_ERROR = ""
+except Exception as _e:
+    _AUDIO_AVAILABLE = False
+    _AUDIO_ERROR = f"sounddevice indisponÃ­vel: {_e}"
+
+try:
+    import requests as _requests
+    _REQUESTS_OK = True
+except ImportError:
+    _REQUESTS_OK = False
+
+MIC_AVAILABLE = _AUDIO_AVAILABLE
+MIC_BACKEND   = "sounddevice" if _AUDIO_AVAILABLE else "none"
+MIC_ERROR     = _AUDIO_ERROR
+
+
+# --------------------------------------------------------------------------- #
+# SeleÃ§Ã£o do microfone                                                         #
+# --------------------------------------------------------------------------- #
+def _device_works(idx):
+    """Verifica rapidamente se o device abre sem erro."""
     try:
-        sr.Microphone.get_pyaudio()
-        MIC_AVAILABLE = True
-        MIC_BACKEND = "pyaudio"
-        MIC_ERROR = ""
-    except Exception as e:
+        audio = _sd.rec(int(16000 * 0.1), samplerate=16000, channels=1,
+                        dtype="int16", device=idx)
+        _sd.wait()
+        return True
+    except Exception:
+        return False
+
+
+def _device_peak(idx, timeout=2.0):
+    """Retorna nÃ­vel de pico do device usando sd.rec() com timeout."""
+    result = [-1]
+    def _run():
         try:
-            import sounddevice as sd
-            _sd = sd
-            MIC_AVAILABLE = True
-            MIC_BACKEND = "sounddevice"
-            MIC_ERROR = ""
-        except Exception as e2:
-            MIC_AVAILABLE = False
-            MIC_BACKEND = "none"
-            MIC_ERROR = f"PyAudio indisponivel ({e}); fallback sounddevice falhou ({e2})"
-except ImportError as e:
-    MIC_AVAILABLE = False
-    MIC_BACKEND = "none"
-    MIC_ERROR = f"SpeechRecognition indisponivel: {e}"
-
-
-def _get_mic_index_sr():
-    if not MIC_AVAILABLE:
-        return None
-
-    # Prioridade 1: índice fixo configurado.
-    configured_index = getattr(config, "MIC_DEVICE_INDEX", None)
-    if configured_index is not None:
-        return configured_index
-
-    # Prioridade 2: procurar por trecho do nome do dispositivo.
-    name_hint = str(getattr(config, "MIC_NAME_CONTAINS", "") or "").strip().lower()
-    if name_hint:
-        try:
-            for idx, name in enumerate(sr.Microphone.list_microphone_names()):
-                if name_hint in (name or "").lower():
-                    return idx
+            dev = _sd.query_devices(idx)
+            ch = min(int(dev.get("max_input_channels", 1)), 2)
+            sr = int(dev.get("default_samplerate", 16000) or 16000)
+            audio = _sd.rec(int(sr * 0.15), samplerate=sr,
+                            channels=ch, dtype="int16", device=idx)
+            _sd.wait()
+            result[0] = int(_np.abs(audio).max())
         except Exception:
-            pass
+            result[0] = -1
+    t = threading.Thread(target=_run, daemon=True)
+    t.start()
+    t.join(timeout=timeout)
+    return result[0]
 
-    # Prioridade 3: padrão do sistema.
-    return None
+
+_cached_mic_idx = [None]
 
 
-def _get_mic_index_sd():
-    """Escolhe índice válido para sounddevice (lista própria do PortAudio)."""
-    if not MIC_AVAILABLE or MIC_BACKEND != "sounddevice":
-        return None
+def _best_mic_index():
+    """Retorna o Ã­ndice do melhor microfone disponÃ­vel (testado de verdade)."""
+    # Recarrega do config em tempo real (pode ter mudado sem reiniciar)
+    idx_cfg = getattr(config, "MIC_DEVICE_INDEX", None)
+    if idx_cfg is not None:
+        _cached_mic_idx[0] = int(idx_cfg)
+        return _cached_mic_idx[0]
 
-    # Prioridade 1: índice fixo configurado.
-    configured_index = getattr(config, "MIC_DEVICE_INDEX", None)
-    if configured_index is not None:
-        return configured_index
+    # Com MIC_DEVICE_INDEX=None, sempre refaz detecÃ§Ã£o â€” nunca usa cache fixo
+    _cached_mic_idx[0] = None
 
-    # Prioridade 2: usar primeiro device com score positivo (skip default do sistema)
     try:
         devices = _sd.query_devices()
-        for idx, dev in enumerate(devices):
-            if dev.get("max_input_channels", 0) <= 0:
-                continue
-            name = str(dev.get("name", "")).lower()
-            
-            # Prefer microfone, input, headset
-            if any(k in name for k in ("microfone", "mic", "input")):
-                if not any(k in name for k in ("output", "alto-falante", "speaker")):
-                    return idx
-            
-            # Accept headset if has "headset"
-            if "headset" in name and not any(k in name for k in ("output", "speaker")):
-                return idx
-            
-            # Accept "grupo de microfones" que captura
-            if "grupo de microfone" in name:
-                return idx
     except Exception:
-        pass
+        return None
 
-    # Fallback: None (tentará candidates)
+    # Hint manual de config
+    hint = str(getattr(config, "MIC_NAME_CONTAINS", "") or "").strip().lower()
+    if hint:
+        for i, d in enumerate(devices):
+            if d.get("max_input_channels", 0) > 0 and hint in d.get("name", "").lower():
+                if _device_peak(i) >= 0:
+                    _cached_mic_idx[0] = i
+                    return i
+
+    # Palavras-chave que identificam loopback/saÃ­da disfarÃ§ada de input
+    LOOPBACK_KEYS = ("alto-falante", "speaker", "mixagem", "stereo mix",
+                     "mixagem estÃ©reo", "what u hear", "wave out",
+                     "btha2dp", "2nd output", "stereo input")
+    # Palavras-chave que identificam microfones reais
+    MIC_KEYS = ("microfone", "microphone", "mic", "headset",
+                "grupo de microfones")
+
+    # Filtra sÃ³ inputs, sem canais de saÃ­da
+    all_inputs = [
+        i for i, d in enumerate(devices)
+        if d.get("max_input_channels", 0) > 0
+        and d.get("max_output_channels", 0) == 0
+    ]
+
+    # Separar em "mic real" vs "suspeito de loopback"
+    def _is_loopback(d):
+        name = d.get("name", "").lower()
+        return any(k in name for k in LOOPBACK_KEYS)
+
+    def _is_real_mic(d):
+        name = d.get("name", "").lower()
+        return any(k in name for k in MIC_KEYS)
+
+    real_mics = [i for i in all_inputs if _is_real_mic(devices[i])
+                 and not _is_loopback(devices[i])]
+    others    = [i for i in all_inputs if i not in real_mics
+                 and not _is_loopback(devices[i])]
+
+    # Prefere mic real; se nÃ£o achar, tenta outros nÃ£o-loopback
+    for pool in (real_mics, others):
+        best_idx  = None
+        best_peak = -1
+        for i in pool:
+            peak = _device_peak(i)
+            if peak > best_peak:
+                best_peak = peak
+                best_idx  = i
+        if best_idx is not None and best_peak > 0:
+            _cached_mic_idx[0] = best_idx
+            return best_idx
+
+    _cached_mic_idx[0] = None
     return None
 
 
-def _candidate_mic_indices_sd():
-    """Retorna candidatos de microfone para fallback no sounddevice."""
-    if not MIC_AVAILABLE or MIC_BACKEND != "sounddevice":
-        return []
-
-    indices = []
-
-    primary = _get_mic_index_sd()
-    if isinstance(primary, int) and primary >= 0:
-        indices.append(primary)
-
-    try:
-        default_in = _sd.default.device[0] if isinstance(_sd.default.device, (list, tuple)) else _sd.default.device
-        if isinstance(default_in, int) and default_in >= 0 and default_in not in indices:
-            indices.append(default_in)
-    except Exception:
-        pass
-
-    try:
-        scored = []
-        for idx, dev in enumerate(_sd.query_devices()):
-            if dev.get("max_input_channels", 0) <= 0 or idx in indices:
-                continue
-            name = str(dev.get("name", "")).lower()
-            score = 0
-            if any(k in name for k in ("microfone", "mic", "headset", "input")):
-                score += 3
-            if "realtek" in name:
-                score += 2
-            if any(k in name for k in ("output", "alto-falante", "speaker", "fones de ouvido", "headphone")):
-                score -= 3
-            scored.append((score, idx))
-
-        for _, idx in sorted(scored, reverse=True):
-            indices.append(idx)
-    except Exception:
-        pass
-
-    return indices[:5]
-
-
-def _capture_vad(device_index, max_secs=7):
-    """Captura simples: grava até 5s se houver qualquer áudio detectado."""
-    sample_rate = 16000
-    try:
-        dev = _sd.query_devices(device_index)
-        native_sr = int(dev.get("default_samplerate", 0) or 0)
-        if native_sr >= 8000:
-            sample_rate = native_sr
-    except Exception:
-        pass
-
-    # Grava um máximo de 5 segundos
-    total_frames = int(5 * sample_rate)
-    
-    try:
-        audio = _sd.rec(total_frames, samplerate=sample_rate, channels=1,
-                        dtype="int16", device=device_index)
-        _sd.wait()
-    except Exception:
+def transcrever_arquivo_whisper(file_bytes, filename="audio.webm", content_type="audio/webm"):
+    """Envia um arquivo de audio (webm/ogg/wav/mp4) direto para Whisper."""
+    api_key = getattr(config, "OPENAI_API_KEY", "") or os.environ.get("OPENAI_API_KEY", "")
+    if not api_key or not _REQUESTS_OK:
         return None
 
-    # Verifica se tem qualquer som (não zero)
-    peak = int(_np.abs(audio).max()) if audio.size else 0
-    if peak < 10:
+    if not file_bytes:
         return None
 
-    raw_bytes = audio.tobytes()
-    return sr.AudioData(raw_bytes, sample_rate, 2)
-
-
-def _capture_with_sounddevice(timeout=10, phrase_time_limit=15):
-    """Tenta capturar áudio no primary device, sem fallback confuso."""
-    mic_index = _get_mic_index_sd()
-    if mic_index is None:
-        return None
     try:
-        return _capture_vad(mic_index, max_secs=min(int(phrase_time_limit), 7))
+        resp = _requests.post(
+            "https://api.openai.com/v1/audio/transcriptions",
+            headers={"Authorization": f"Bearer {api_key}"},
+            files={"file": (filename, file_bytes, content_type or "application/octet-stream")},
+            data={"model": "whisper-1", "language": "pt"},
+            timeout=20,
+        )
+        if resp.status_code == 200:
+            return (resp.json().get("text") or "").strip()
+        print(f"[hearing] Whisper arquivo erro {resp.status_code}: {resp.text[:200]}")
     except Exception as e:
-        print(f"[hearing] Device {mic_index} falhou: {e}")
+        print(f"[hearing] Whisper arquivo exceção: {e}")
+    return None
+
+
+# --------------------------------------------------------------------------- #
+# Captura com VAD via sd.rec() â€” Ãºnico mÃ©todo que funciona em WDM-KS          #
+# --------------------------------------------------------------------------- #
+def _capturar_audio(device_index, max_secs=10):
+    """
+    Grava com VAD usando sd.rec(). Para ao detectar silÃªncio.
+    Retorna (pcm_bytes, 16000) ou None.
+    """
+    SAMPLE_RATE  = 16000
+    CHUNK_MS     = 100
+    SILENCE_MS   = 700
+    SILENCE_N    = int(SILENCE_MS / CHUNK_MS)
+    MAX_CHUNKS   = int(max_secs * 1000 / CHUNK_MS)
+    MIN_SPEECH_N = 2
+
+    try:
+        dev_info = _sd.query_devices(device_index)
+        dev_ch = min(int(dev_info.get("max_input_channels", 1)), 2)
+        dev_sr = int(dev_info.get("default_samplerate", 16000) or 16000)
+    except Exception:
+        dev_ch = 1
+        dev_sr = 16000
+
+    CHUNK_FRAMES = int(dev_sr * CHUNK_MS / 1000)
+
+    # Calibra ruÃ­do com 2 chunks iniciais
+    noise_level = 120
+    try:
+        calib = _sd.rec(CHUNK_FRAMES * 2, samplerate=dev_sr,
+                        channels=dev_ch, dtype="int16", device=device_index)
+        _sd.wait()
+        # Em vÃ¡rios notebooks/headsets o nÃ­vel mÃ©dio fica baixo (<100),
+        # entÃ£o um limiar mÃ­nimo alto fazia a fala nunca ser detectada.
+        calib_mean = int(_np.abs(calib).mean())
+        noise_level = max(calib_mean * 2, 40)  # limiar mais sensível para notebook
+    except Exception:
+        pass
+
+    frames_buf = []
+    silent_n   = 0
+    speech_n   = 0
+    started    = False
+
+    for _ in range(MAX_CHUNKS):
+        try:
+            chunk = _sd.rec(CHUNK_FRAMES, samplerate=dev_sr,
+                            channels=dev_ch, dtype="int16", device=device_index)
+            _sd.wait()
+        except Exception as e:
+            print(f"[hearing] erro ao gravar chunk: {e}")
+            break  # para no primeiro erro, nÃ£o fica em loop infinito
+
+        mono = chunk.mean(axis=1).astype("int16") if dev_ch > 1 else chunk.flatten()
+        level = int(_np.abs(mono).mean())
+        is_speech = level > noise_level
+
+        if is_speech:
+            speech_n += 1
+            silent_n = 0
+            if not started and speech_n >= 2:
+                started = True
+            if started:
+                frames_buf.append(mono)
+        else:
+            if started:
+                frames_buf.append(mono)
+                silent_n += 1
+                if silent_n >= SILENCE_N:
+                    break
+
+    if not frames_buf or speech_n < MIN_SPEECH_N:
         return None
 
+    audio = _np.concatenate(frames_buf).astype("int16")
+    if dev_sr != SAMPLE_RATE:
+        ratio = SAMPLE_RATE / dev_sr
+        new_len = int(len(audio) * ratio)
+        indices = _np.clip((_np.arange(new_len) / ratio).astype(int), 0, len(audio) - 1)
+        audio = audio[indices]
+    return audio.tobytes(), SAMPLE_RATE
 
-def _capture_with_sounddevice_on_device(device_index, timeout=10, phrase_time_limit=15):
-    return _capture_vad(device_index, max_secs=min(int(phrase_time_limit), 7))
+
+# --------------------------------------------------------------------------- #
+# TranscriÃ§Ã£o via OpenAI Whisper                                               #
+# --------------------------------------------------------------------------- #
+def _transcrever_whisper(pcm_bytes, sample_rate):
+    """Envia Ã¡udio PCM para OpenAI Whisper e retorna texto."""
+    api_key = getattr(config, "OPENAI_API_KEY", "") or os.environ.get("OPENAI_API_KEY", "")
+    if not api_key or not _REQUESTS_OK:
+        return None
+
+    buf = io.BytesIO()
+    with wave.open(buf, "wb") as wf:
+        wf.setnchannels(1)
+        wf.setsampwidth(2)
+        wf.setframerate(sample_rate)
+        wf.writeframes(pcm_bytes)
+    buf.seek(0)
+
+    try:
+        resp = _requests.post(
+            "https://api.openai.com/v1/audio/transcriptions",
+            headers={"Authorization": f"Bearer {api_key}"},
+            files={"file": ("audio.wav", buf, "audio/wav")},
+            data={"model": "whisper-1", "language": "pt"},
+            timeout=15,
+        )
+        if resp.status_code == 200:
+            return (resp.json().get("text") or "").strip()
+        print(f"[hearing] Whisper erro {resp.status_code}: {resp.text[:200]}")
+    except Exception as e:
+        print(f"[hearing] Whisper exceÃ§Ã£o: {e}")
+    return None
 
 
-def ouvir(timeout=10, phrase_time_limit=15):
+# --------------------------------------------------------------------------- #
+# API pÃºblica                                                                  #
+# --------------------------------------------------------------------------- #
+def ouvir(timeout=10, phrase_time_limit=12):
     """Ouve o microfone e retorna o texto transcrito (ou None)."""
     if not MIC_AVAILABLE:
-        detalhe = f" ({MIC_ERROR})" if MIC_ERROR else ""
-        print(f"[hearing] Microfone indisponivel{detalhe} — modo texto ativo.")
+        print(f"[hearing] Microfone indisponÃ­vel ({MIC_ERROR}) â€” modo texto.")
         return None
 
-    try:
-        print("🎤  Ouvindo... (fale agora)")
-        if MIC_BACKEND == "pyaudio":
-            mic_index = _get_mic_index_sr()
-            with sr.Microphone(device_index=mic_index) as source:
-                _recognizer.adjust_for_ambient_noise(source, duration=0.4)
-                audio = _recognizer.listen(
-                    source,
-                    timeout=timeout,
-                    phrase_time_limit=phrase_time_limit,
-                )
-        else:
-            # Tenta no dispositivo principal e faz fallback em outros inputs.
-            for dev_idx in _candidate_mic_indices_sd():
-                audio = _capture_with_sounddevice_on_device(
-                    dev_idx,
-                    timeout=timeout,
-                    phrase_time_limit=phrase_time_limit,
-                )
-                if audio is None:
-                    continue
-                try:
-                    texto = _recognizer.recognize_google(audio, language="pt-BR")
-                    print(f"Você (voz): {texto} [dev={dev_idx}]")
-                    return texto
-                except sr.UnknownValueError:
-                    continue
-            return None
+    mic_idx = _best_mic_index()
+    if mic_idx is None:
+        print("[hearing] Nenhum microfone encontrado.")
+        return None
 
-        texto = _recognizer.recognize_google(audio, language="pt-BR")
-        print(f"Você (voz): {texto}")
-        return texto
+    print("ðŸŽ¤  Ouvindo... (fale agora)")
+    result = _capturar_audio(mic_idx, max_secs=min(phrase_time_limit, 12))
+    if result is None:
+        return None
 
-    except sr.WaitTimeoutError:
-        return None
-    except sr.UnknownValueError:
-        print("[hearing] Não entendi. Tente novamente.")
-        return None
-    except Exception as e:
-        print(f"[hearing] Erro: {e}")
-        return None
+    pcm_bytes, sample_rate = result
+    print("[hearing] Transcrevendo com Whisper...")
+    texto = _transcrever_whisper(pcm_bytes, sample_rate)
+    if texto:
+        print(f"VocÃª (voz): {texto}")
+    return texto or None

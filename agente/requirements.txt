@@ -4,6 +4,7 @@
 
 requests
 pillow
+opencv-python
 pyautogui
 pyperclip
 pyttsx3
@@ -16,3 +17,9 @@ sounddevice
 #   pip install pipwin
 #   pipwin install pyaudio
 pyaudio
+
+# Download de videos por link
+yt-dlp
+
+# Bot Telegram
+python-telegram-bot
