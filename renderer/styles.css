@@ -1,0 +1,360 @@
+:root {
+  color-scheme: dark;
+  --bg-1: #08131f;
+  --bg-2: #10253a;
+  --card: rgba(8, 19, 31, 0.78);
+  --line: rgba(173, 220, 255, 0.18);
+  --text: #eef7ff;
+  --muted: #9eb7ca;
+  --accent: #76e0ff;
+  --accent-2: #9cffb8;
+  --warn: #ffd072;
+  --danger: #ff7a86;
+  --shadow: 0 24px 70px rgba(0, 0, 0, 0.38);
+  font-family: "Segoe UI", "Trebuchet MS", sans-serif;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  min-height: 100vh;
+  background: transparent;
+  color: var(--text);
+}
+
+button,
+input {
+  font: inherit;
+}
+
+.shell {
+  min-height: 100vh;
+  padding: 18px;
+  border: 1px solid var(--line);
+  border-radius: 28px;
+  background:
+    radial-gradient(circle at top, rgba(118, 224, 255, 0.16), transparent 32%),
+    linear-gradient(180deg, rgba(8, 19, 31, 0.92), rgba(16, 37, 58, 0.76));
+  box-shadow: var(--shadow);
+  backdrop-filter: blur(18px);
+}
+
+.titlebar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 14px;
+  -webkit-app-region: drag;
+}
+
+.no-drag,
+.no-drag * {
+  -webkit-app-region: no-drag;
+}
+
+.eyebrow {
+  margin: 0 0 4px;
+  font-size: 12px;
+  color: var(--accent);
+  text-transform: uppercase;
+  letter-spacing: 0.12em;
+}
+
+h1 {
+  margin: 0;
+  font-size: 24px;
+}
+
+.window-actions {
+  display: flex;
+  gap: 8px;
+}
+
+.window-actions button,
+.controls button,
+.task-grid button,
+.chat-form button {
+  border: 1px solid var(--line);
+  border-radius: 14px;
+  background: rgba(255, 255, 255, 0.06);
+  color: var(--text);
+  cursor: pointer;
+  transition: transform 120ms ease, background 120ms ease, border-color 120ms ease;
+}
+
+.window-actions button:hover,
+.controls button:hover,
+.task-grid button:hover,
+.chat-form button:hover {
+  transform: translateY(-1px);
+  background: rgba(118, 224, 255, 0.16);
+  border-color: rgba(118, 224, 255, 0.35);
+}
+
+.window-actions button {
+  padding: 8px 10px;
+}
+
+.stage {
+  position: relative;
+  overflow: hidden;
+  padding: 18px;
+  border-radius: 26px;
+  background: linear-gradient(180deg, rgba(255, 255, 255, 0.04), rgba(255, 255, 255, 0.01));
+  border: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+.orbital {
+  position: absolute;
+  border-radius: 999px;
+  filter: blur(1px);
+}
+
+.orbital-one {
+  inset: 14% auto auto 8%;
+  width: 120px;
+  height: 120px;
+  background: radial-gradient(circle, rgba(118, 224, 255, 0.18), transparent 70%);
+}
+
+.orbital-two {
+  inset: auto 4% 10% auto;
+  width: 160px;
+  height: 160px;
+  background: radial-gradient(circle, rgba(156, 255, 184, 0.14), transparent 70%);
+}
+
+.avatar-card {
+  position: relative;
+  display: grid;
+  place-items: center;
+  min-height: 290px;
+}
+
+.avatar {
+  position: relative;
+  width: 170px;
+  height: 240px;
+  animation: float 3.8s ease-in-out infinite;
+}
+
+.halo {
+  position: absolute;
+  inset: 0;
+  margin: auto;
+  width: 160px;
+  height: 160px;
+  border-radius: 50%;
+  background: radial-gradient(circle, rgba(118, 224, 255, 0.26), transparent 62%);
+}
+
+.head {
+  position: absolute;
+  inset: 8px 0 auto;
+  margin: auto;
+  width: 108px;
+  height: 118px;
+  border-radius: 52px 52px 44px 44px;
+  background: linear-gradient(180deg, #f8dcc4, #dfb195);
+  z-index: 3;
+}
+
+.hair {
+  position: absolute;
+  inset: -8px 0 auto;
+  width: 108px;
+  height: 62px;
+  border-radius: 48px 48px 22px 22px;
+  background: linear-gradient(180deg, #1d3953, #0f2236);
+}
+
+.eyes {
+  position: absolute;
+  inset: 44px 0 auto;
+  display: flex;
+  justify-content: center;
+  gap: 24px;
+}
+
+.eye {
+  width: 14px;
+  height: 14px;
+  border-radius: 50%;
+  background: #10253a;
+  box-shadow: 0 0 0 4px rgba(255, 255, 255, 0.45) inset;
+  animation: blink 5s infinite;
+}
+
+.mouth {
+  position: absolute;
+  inset: 80px 0 auto;
+  margin: auto;
+  width: 28px;
+  height: 10px;
+  border-radius: 0 0 18px 18px;
+  background: #b55665;
+  transform-origin: center;
+  transition: transform 80ms ease, height 80ms ease;
+}
+
+.mouth.talking {
+  height: 18px;
+  transform: scaleY(1.15);
+}
+
+.torso {
+  position: absolute;
+  inset: 108px 0 auto;
+  margin: auto;
+  width: 128px;
+  height: 102px;
+  border-radius: 34px 34px 28px 28px;
+  background: linear-gradient(180deg, #76e0ff, #2b6f99);
+}
+
+.arm {
+  position: absolute;
+  top: 120px;
+  width: 26px;
+  height: 90px;
+  border-radius: 18px;
+  background: linear-gradient(180deg, #7ad7ff, #256886);
+  z-index: 1;
+}
+
+.arm.left {
+  left: 16px;
+  transform: rotate(18deg);
+}
+
+.arm.right {
+  right: 16px;
+  transform: rotate(-18deg);
+}
+
+.status-row,
+.controls,
+.task-grid,
+.chat-form {
+  display: grid;
+  gap: 10px;
+}
+
+.status-row {
+  grid-template-columns: 1fr auto;
+  margin-top: 8px;
+  align-items: center;
+}
+
+.status-pill,
+.mic-level {
+  padding: 8px 12px;
+  border-radius: 999px;
+  font-size: 12px;
+  border: 1px solid var(--line);
+  background: rgba(255, 255, 255, 0.04);
+}
+
+.controls {
+  grid-template-columns: repeat(3, 1fr);
+  margin-top: 14px;
+}
+
+.controls button,
+.task-grid button,
+.chat-form button {
+  padding: 12px 14px;
+}
+
+.chat-panel,
+.task-panel,
+.camera-panel {
+  margin-top: 14px;
+  padding: 14px;
+  border-radius: 22px;
+  border: 1px solid var(--line);
+  background: var(--card);
+}
+
+.messages {
+  display: grid;
+  gap: 8px;
+  max-height: 210px;
+  overflow: auto;
+  padding-right: 4px;
+}
+
+.message {
+  padding: 10px 12px;
+  border-radius: 16px;
+  font-size: 14px;
+  line-height: 1.4;
+}
+
+.message.user {
+  background: rgba(118, 224, 255, 0.15);
+}
+
+.message.assistant {
+  background: rgba(255, 255, 255, 0.06);
+}
+
+.chat-form {
+  grid-template-columns: 1fr auto;
+  margin-top: 12px;
+}
+
+.chat-form input {
+  padding: 12px 14px;
+  border-radius: 14px;
+  border: 1px solid var(--line);
+  background: rgba(4, 12, 19, 0.72);
+  color: var(--text);
+}
+
+.panel-title {
+  margin: 0 0 10px;
+  color: var(--muted);
+}
+
+.task-grid {
+  grid-template-columns: repeat(2, 1fr);
+}
+
+.camera-panel video {
+  width: 100%;
+  border-radius: 16px;
+  background: #000;
+  aspect-ratio: 4 / 3;
+}
+
+.hidden {
+  display: none;
+}
+
+@keyframes float {
+  0%,
+  100% {
+    transform: translateY(0px);
+  }
+
+  50% {
+    transform: translateY(-10px);
+  }
+}
+
+@keyframes blink {
+  0%,
+  45%,
+  100% {
+    transform: scaleY(1);
+  }
+
+  48%,
+  52% {
+    transform: scaleY(0.08);
+  }
+}

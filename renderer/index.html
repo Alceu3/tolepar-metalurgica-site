@@ -1,0 +1,79 @@
+<!doctype html>
+<html lang="pt-BR">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Floating Avatar Assistant</title>
+    <link rel="stylesheet" href="./styles.css" />
+  </head>
+  <body>
+    <main class="shell">
+      <header class="titlebar">
+        <div>
+          <p class="eyebrow">Local overlay</p>
+          <h1>Avatar Desk</h1>
+        </div>
+        <div class="window-actions no-drag">
+          <button id="pin-button" title="Fixar">Fixar</button>
+          <button id="minimize-button" title="Minimizar">_</button>
+          <button id="close-button" title="Fechar">X</button>
+        </div>
+      </header>
+
+      <section class="stage">
+        <div class="orbital orbital-one"></div>
+        <div class="orbital orbital-two"></div>
+        <div class="avatar-card">
+          <div id="avatar" class="avatar idle">
+            <div class="halo"></div>
+            <div class="head">
+              <div class="hair"></div>
+              <div class="eyes">
+                <span class="eye"></span>
+                <span class="eye"></span>
+              </div>
+              <div id="mouth" class="mouth"></div>
+            </div>
+            <div class="torso"></div>
+            <div class="arm left"></div>
+            <div class="arm right"></div>
+          </div>
+        </div>
+        <div class="status-row">
+          <span id="status-pill" class="status-pill">Pronta</span>
+          <span id="mic-level" class="mic-level">Mic: inativo</span>
+        </div>
+      </section>
+
+      <section class="controls">
+        <button id="voice-button">Falar resposta</button>
+        <button id="listen-button">Ouvir microfone</button>
+        <button id="camera-button">Abrir camera</button>
+      </section>
+
+      <section class="chat-panel">
+        <div id="messages" class="messages"></div>
+        <form id="chat-form" class="chat-form">
+          <input id="chat-input" type="text" placeholder="Digite um pedido ou conversa..." autocomplete="off" />
+          <button type="submit">Enviar</button>
+        </form>
+      </section>
+
+      <section class="task-panel">
+        <p class="panel-title">Tarefas rapidas</p>
+        <div class="task-grid">
+          <button data-task="open-notepad">Bloco de Notas</button>
+          <button data-task="open-calculator">Calculadora</button>
+          <button data-task="open-browser">Abrir navegador</button>
+          <button data-task="tell-time">Que horas sao?</button>
+        </div>
+      </section>
+
+      <section class="camera-panel hidden" id="camera-panel">
+        <video id="camera-feed" autoplay playsinline muted></video>
+      </section>
+    </main>
+
+    <script src="./app.js"></script>
+  </body>
+  </html>

@@ -1,0 +1,22 @@
+{
+  "name": "floating-avatar-assistant",
+  "version": "1.0.0",
+  "description": "Floating local desktop avatar assistant for Windows.",
+  "main": "main.js",
+  "scripts": {
+    "start": "electron .",
+    "dev": "electron ."
+  },
+  "keywords": [
+    "electron",
+    "avatar",
+    "assistant",
+    "overlay"
+  ],
+  "author": "",
+  "license": "MIT",
+  "type": "commonjs",
+  "devDependencies": {
+    "electron": "^41.2.2"
+  }
+}
